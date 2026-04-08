@@ -1,0 +1,124 @@
+# =========================================================
+# FPUNA BIGDATA LAB - .gitignore
+# Base académica para laboratorio y repositorio GitHub
+# =========================================================
+
+# ---------------------------------------------------------
+# Sistema operativo
+# ---------------------------------------------------------
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ---------------------------------------------------------
+# Editores / IDEs
+# ---------------------------------------------------------
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*~
+
+# ---------------------------------------------------------
+# Python
+# ---------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.python-version
+
+# Entornos virtuales
+.venv/
+venv/
+env/
+ENV/
+
+# Cachés y tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Cobertura / build
+.coverage
+.coverage.*
+htmlcov/
+build/
+dist/
+.eggs/
+*.egg-info/
+pip-wheel-metadata/
+
+# ---------------------------------------------------------
+# Variables de entorno / secretos
+# ---------------------------------------------------------
+.env
+.env.*
+!.env.sample
+!.env.example
+
+# ---------------------------------------------------------
+# Airflow
+# ---------------------------------------------------------
+orchestration/airflow/logs/
+airflow-webserver.pid
+airflow-scheduler.pid
+airflow-triggerer.pid
+airflow.db
+
+# ---------------------------------------------------------
+# Pentaho / Spoon / Kettle
+# ---------------------------------------------------------
+etl/pentaho/logs/
+.kettle/
+.spoon/
+
+# ---------------------------------------------------------
+# Bases locales / artefactos binarios
+# ---------------------------------------------------------
+*.duckdb
+*.db
+*.sqlite
+*.sqlite3
+
+# ---------------------------------------------------------
+# Datos generados o temporales
+# Nota: se ignoran por carpeta, no por extensión global,
+# para no bloquear seeds o samples que sí puedan versionarse.
+# ---------------------------------------------------------
+data/raw/**
+!data/raw/.gitkeep
+
+data/staged/**
+!data/staged/.gitkeep
+
+data/processed/**
+!data/processed/.gitkeep
+
+data/exported/**
+!data/exported/.gitkeep
+
+data/duckdb/**
+!data/duckdb/.gitkeep
+
+data/external/**
+!data/external/.gitkeep
+
+# Archivos de salida y temporales
+reports/execution/
+tmp/
+temp/
+.cache/
+
+# ---------------------------------------------------------
+# Logs generales
+# ---------------------------------------------------------
+*.log
+
+# ---------------------------------------------------------
+# Archivos de notebook / misc
+# ---------------------------------------------------------
+*.tmp
+*.bak
