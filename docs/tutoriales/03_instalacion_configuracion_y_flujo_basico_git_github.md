@@ -37,7 +37,7 @@ Facultad Politécnica - Universidad Nacional de Asunción
 
 ## Nota sobre esta documentación
 
-Este tutorial fue elaborado y ajustado para el entorno técnico de referencia de la asignatura **Electiva - Big Data** de la **Facultad Politécnica de la Universidad Nacional de Asunción**, en el marco del desarrollo de laboratorios, pruebas de concepto y ejercicios prácticos del periodo académico **2026**.
+Este tutorial fue elaborado y ajustado para el entorno técnico de referencia el curso básico de **Introducción a Big Data** del **Centro de Innovación TIC (PK)** de la **Facultad Politécnica de la Universidad Nacional de Asunción**, en el marco del desarrollo de laboratorios, pruebas de concepto y ejercicios prácticos del periodo académico **2026**.
 
 Los pasos, comandos y recomendaciones aquí presentados fueron pensados para un flujo de trabajo técnico basado principalmente en **Windows 11 + WSL2 + Ubuntu 22.04.5 LTS**, utilizando Git desde la terminal Linux y sincronizando repositorios con GitHub.
 

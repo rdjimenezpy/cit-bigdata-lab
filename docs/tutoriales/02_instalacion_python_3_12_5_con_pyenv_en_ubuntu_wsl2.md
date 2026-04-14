@@ -290,16 +290,16 @@ En Ubuntu y otras distribuciones basadas en Debian, conviene agregar la configur
 #### 6.1 Agregar configuración a `~/.bashrc`
 
 ```bash
-echo 'exported PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
-echo '[[ -d $PYENV_ROOT/bin ]] && exported PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
+echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
 echo 'eval "$(pyenv init - bash)"' >> ~/.bashrc
 ```
 
 #### 6.2 Agregar configuración a `~/.profile`
 
 ```bash
-echo 'exported PYENV_ROOT="$HOME/.pyenv"' >> ~/.profile
-echo '[[ -d $PYENV_ROOT/bin ]] && exported PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.profile
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.profile
+echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.profile
 echo 'eval "$(pyenv init - bash)"' >> ~/.profile
 ```
 

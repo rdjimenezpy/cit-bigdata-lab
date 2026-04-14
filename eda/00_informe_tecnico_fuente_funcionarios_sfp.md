@@ -18,8 +18,8 @@ Los datos publicados en este portal son obtenidos del *SICCA* actualizados mensu
 
 **Prof. Ing. Richard Daniel Jiménez Riveros**  
 Ingeniero en Informática  
-Docente de la asignatura *Electiva - Big Data*  
-Facultad Politécnica - Universidad Nacional de Asunción  
+Docente del curso *Introducción a Big Data en el Centro de Innovación TIC*  
+Facultad Politécnica - Universidad Nacional de Asunción 
 
 ---
 

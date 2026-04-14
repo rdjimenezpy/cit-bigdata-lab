@@ -16,9 +16,8 @@
 
 **Prof. Ing. Richard Daniel Jiménez Riveros**  
 Ingeniero en Informática  
-Docente de la asignatura *Electiva - Big Data*  
-Facultad Politécnica - Universidad Nacional de Asunción  
-
+Docente del curso *Introducción a Big Data en el Centro de Innovación TIC*  
+Facultad Politécnica - Universidad Nacional de Asunción
 ---
 
 ## Fecha y versión
@@ -30,7 +29,7 @@ Facultad Politécnica - Universidad Nacional de Asunción
 
 ## 1. Propósito del documento
 
-Este documento resume el contexto institucional, técnico y analítico de la fuente principal de datos utilizada para las clases de laboratorio de la asignatura **Electiva - Big Data**, orientado al análisis de remuneraciones de funcionarios públicos que prestan servicios en las **Universidades Nacionales del Paraguay**.
+Este documento resume el contexto institucional, técnico y analítico de la fuente principal de datos utilizada para las clases de laboratorio del curso de **Introducción a Big Data**, orientado al análisis de remuneraciones de funcionarios públicos que prestan servicios en las **Universidades Nacionales del Paraguay**.
 
 Su finalidad es dejar explícito:
 

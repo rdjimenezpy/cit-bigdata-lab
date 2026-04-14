@@ -37,7 +37,7 @@ Facultad Politécnica - Universidad Nacional de Asunción
 
 ## Nota sobre esta documentación
 
-Este tutorial fue elaborado y ajustado para el entorno técnico de referencia de la asignatura **Electiva - Big Data** de la **Facultad Politécnica de la Universidad Nacional de Asunción**, en el marco del desarrollo de laboratorios, pruebas de concepto y ejercicios prácticos del periodo académico **2026**.
+Este tutorial fue elaborado y ajustado para el entorno técnico de referencia el curso básico de **Introducción a Big Data** del **Centro de Innovación TIC (PK)** de la **Facultad Politécnica de la Universidad Nacional de Asunción**, en el marco del desarrollo de laboratorios, pruebas de concepto y ejercicios prácticos del periodo académico **2026**.
 
 Los pasos, comandos, rutas, capturas o salidas de consola presentados en este material fueron validados a nivel metodológico para un entorno de laboratorio controlado. No obstante, su reproducción en otros equipos puede requerir ajustes menores debido a diferencias en:
 

@@ -58,7 +58,7 @@ En caso de necesitar apoyo adicional para reproducir el tutorial, el estudiante 
 
 **PostgreSQL** es un sistema gestor de bases de datos relacional y objeto-relacional, ampliamente utilizado en entornos académicos, empresariales y de ingeniería de datos. En este proyecto cumple un rol clave como **motor OLTP** para la capa operacional del pipeline, donde se modelan y administran datos estructurados que luego serán extraídos, transformados y cargados hacia capas analíticas.
 
-En el contexto de la asignatura **Electiva - Big Data**, PostgreSQL no se estudia como una herramienta aislada, sino como parte de un flujo técnico mayor que incluye:
+En el contexto del curso básico de **Introducción a Big Data**, PostgreSQL no se estudia como una herramienta aislada, sino como parte de un flujo técnico mayor que incluye:
 
 - preparación del entorno de laboratorio,
 - diseño de esquemas relacionales,

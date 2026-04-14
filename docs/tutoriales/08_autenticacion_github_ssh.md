@@ -37,7 +37,7 @@ Facultad Politécnica - Universidad Nacional de Asunción
 
 ## Nota sobre esta documentación
 
-Este tutorial fue elaborado y ajustado para el entorno técnico de referencia de la asignatura **Electiva - Big Data** de la **Facultad Politécnica de la Universidad Nacional de Asunción**, en el marco del desarrollo de laboratorios, pruebas de concepto y ejercicios prácticos del periodo académico **2026**.
+Este tutorial fue elaborado y ajustado para el entorno técnico de referencia del curso básico de **Introducción a Big Data** del **Centro de Innovación TIC** de la **Facultad Politécnica de la Universidad Nacional de Asunción**, en el marco del desarrollo de laboratorios, pruebas de concepto y ejercicios prácticos del periodo académico **2026**.
 
 Los pasos, comandos, rutas y salidas de consola presentados en este material fueron validados conceptualmente para un flujo de trabajo con **Git + GitHub + SSH** ejecutado desde **Windows 11 con WSL2 sobre Ubuntu 22.04.5 LTS**. No obstante, su reproducción en otros equipos puede requerir ajustes menores debido a diferencias en:
 
@@ -128,7 +128,7 @@ Al finalizar este tutorial, el estudiante será capaz de:
 
 ## 4. Contexto técnico
 
-Dentro del stack de trabajo del proyecto **BIGDATA-FPUNA**, Git y GitHub cumplen el papel de control de versiones, trazabilidad del código fuente, publicación de materiales técnicos y sincronización colaborativa del repositorio. En ese contexto, utilizar autenticación SSH aporta un beneficio práctico directo: evita depender de credenciales interactivas por cada operación y reduce fricción al sincronizar notebooks, scripts Python, DAGs de Airflow, documentación Markdown y otros activos del laboratorio.
+Dentro del stack de trabajo del proyecto **CIT-BIGDATA-LAB**, Git y GitHub cumplen el papel de control de versiones, trazabilidad del código fuente, publicación de materiales técnicos y sincronización colaborativa del repositorio. En ese contexto, utilizar autenticación SSH aporta un beneficio práctico directo: evita depender de credenciales interactivas por cada operación y reduce fricción al sincronizar notebooks, scripts Python, DAGs de Airflow, documentación Markdown y otros activos del laboratorio.
 
 Cuando el trabajo se ejecuta desde **WSL2**, es recomendable que tanto Git como la clave SSH y el agente de autenticación se gestionen desde el mismo entorno Linux. Mezclar indiscriminadamente Git ejecutado en Windows con claves almacenadas sólo en WSL —o viceversa— suele introducir errores de configuración, inconsistencias en rutas y problemas de autenticación difíciles de diagnosticar.
 
