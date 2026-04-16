@@ -212,6 +212,34 @@ Este comando lista el contenido del directorio oculto `~/.ssh`, donde normalment
 **Resultado esperado:**  
 Debe mostrarse el contenido del directorio `~/.ssh`. Si no existe, el sistema puede indicar que el directorio no está disponible. Eso no representa un error crítico; simplemente significa que aún no se generó ninguna clave SSH en este entorno.
 
+**Ya tienes tu par de claves SSH (id_ed25519 y id_ed25519.pub) en ~/.ssh**  
+Te guío paso a paso para verificar y configurar tu entorno WSL/Ubuntu:
+
+```bash
+# 1. Verificar que la clave pública esté en GitHub
+cat ~/.ssh/id_ed25519.pub
+
+# 2. Configurar el cliente SSH
+nano ~/.ssh/config
+
+# 2.1. Agrega
+Host github.com
+  User git
+  HostName github.com
+  IdentityFile ~/.ssh/id_ed25519
+  IdentitiesOnly yes
+
+# 3. Probar la conexión
+ssh -T git@github.com
+
+# 4. Verificar con tu repositorio
+git remote -v
+
+# 4.1. Si aparece con https://..., cámbialo a SSH:
+git remote set-url origin git@github.com:rdjimenezpy/cit-bigdata-lab.git
+
+```
+
 ---
 
 ### Paso 2 — Generar una nueva clave SSH recomendada para GitHub

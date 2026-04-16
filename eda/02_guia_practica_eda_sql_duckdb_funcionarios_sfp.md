@@ -228,7 +228,7 @@ export STG_DIR=${REPO_ROOT}/data/staged
 
 mkdir -p "${RAW_DIR}/sfp_funcionarios/2026_01"
 mkdir -p "${STG_DIR}/sfp_funcionarios/2026_01"
-cd "${SRC_DIR}"
+cd "${RAW_DIR}/sfp_funcionarios/2026_01"
 pwd
 ```
 
@@ -671,7 +671,7 @@ La exploración del primer carácter del documento revela un atributo categóric
 -- Query 1: Extarer primer caracter
 SELECT DISTINCT substr(documento, 1, 1) AS tipo_identificador
 FROM staging.v_funcionarios_2026_1_typed
-ORDER BY primer_caracter;
+ORDER BY tipo_identificador;
 
 -- Query 2: Explorar registros con tipo de identificador 'A', 'E' y 'V'
 SELECT *, substr(documento, 1, 1) AS tipo_identificador

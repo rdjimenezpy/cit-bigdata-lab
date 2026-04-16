@@ -251,7 +251,7 @@ Expand-Archive -Path "C:\ruta\al\archivo\pdi-ce-10.zip" -DestinationPath "C:\too
 
 ```bash
 # Ajustar el nombre del archivo según el paquete real disponible
-unzip ~/Descargas/pdi-ce-10.zip -d "$HOME/tools/pentaho"
+unzip ~/Descargas/etl-ce-10.zip -d "$HOME/tools/pentaho"
 ```
 
 #### Caso B — Si se dispone de un instalador o binario autoextraíble
@@ -538,7 +538,7 @@ Como siguiente paso recomendado, conviene documentar y estandarizar:
 ```bash
 mkdir -p "$HOME/tools/pentaho"
 mkdir -p "$HOME/workspace/bigdata-fpuna/etl/pentaho"
-unzip ~/Descargas/pdi-ce-10.zip -d "$HOME/tools/pentaho"
+unzip ~/Descargas/etl-ce-10.zip -d "$HOME/tools/pentaho"
 find "$HOME/tools/pentaho" -type f \( -name "spoon.sh" -o -name "Spoon.sh" \)
 cd "$HOME/tools/pentaho/{{carpeta_pdi}}/data-integration"
 chmod +x spoon.sh kitchen.sh pan.sh
