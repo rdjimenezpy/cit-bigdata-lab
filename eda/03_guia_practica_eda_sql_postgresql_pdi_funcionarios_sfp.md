@@ -447,18 +447,18 @@ Salir:
 Conectarse a la base:
 
 ```bash
-psql -h localhost -p 5432 -U cit_bigdata -d cit_bigdata_lab
+psql -h localhost -p 5432 -U cit_bigdata -d eda
 ```
 
 Si el usuario no puede crear esquemas, otorgar permisos desde `postgres`:
 
 ```bash
-sudo -u postgres psql -d cit_bigdata_lab
+sudo -u postgres psql -d eda
 ```
 
 ```sql
-GRANT CREATE ON DATABASE cit_bigdata_lab TO cit_bigdata;
-ALTER DATABASE cit_bigdata_lab OWNER TO cit_bigdata;
+GRANT CREATE ON DATABASE eda TO postgres;
+ALTER DATABASE eda OWNER TO postgres;
 ```
 
 ---
@@ -490,7 +490,7 @@ La tabla `raw` debe recibir todos los campos como `TEXT`. Esto evita conversione
 ```sql
 DROP TABLE IF EXISTS raw.funcionarios_2026_1;
 
-CREATE TABLE raw.funcionarios_2026_1 (
+CREATE UNLOGGED TABLE raw.funcionarios_2026_1 (
     anho TEXT,
     mes TEXT,
     nivel TEXT,
