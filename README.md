@@ -271,6 +271,9 @@ cit-bigdata-lab/
 * **`.gitignore`**
   Define los archivos y carpetas que no deben versionarse en Git, como entornos virtuales, cachés, archivos temporales, logs, artefactos generados, salidas locales del sistema y archivos del IDE.
 
+- `.gitattributes`
+  Mantiene los archivos con el salto de línea **LF en el repositorio**, independientemente de si trabajas en Windows, WSL o Linux.
+
 * **`.env.sample`**
   Plantilla de variables de entorno del proyecto. Sirve como referencia para que cada usuario cree su propio archivo `.env` con parámetros sensibles o específicos de su entorno, sin exponer credenciales reales en el repositorio.
 
@@ -519,18 +522,18 @@ sudo nano /opt/repo/cit-bigdata-lab/.env
 Editar `.env` con los parámetros reales del laboratorio, manteniendo la misma estructura de `.env.sample`:
 
 ```bash
-exported REPO_ENV=lab
-exported PROJECT_NAME=cit-bigdata-lab
-exported REPO_ROOT=/opt/repo/${PROJECT_NAME}
-exported POSTGRES_HOST=localhost
-exported POSTGRES_PORT=5432
-exported POSTGRES_DBNAME=bigdata_lab
-exported POSTGRES_USER=postgres
-exported POSTGRES_PASSWORD=postgres
-exported POSTGRES_DBINIT=${REPO_ROOT}/database/postgresql/ddl/db_init.sql
-exported DUCKDB_PATH=./data/duckdb/bigdata_lab.duckdb
-exported AIRFLOW_HOME=/opt/airflow/airflow_3.1.8
-exported PENTAHO_HOME=/opt/pentaho/data-integration
+export REPO_ENV=lab
+export PROJECT_NAME=cit-bigdata-lab
+export REPO_ROOT=/opt/repo/${PROJECT_NAME}
+export POSTGRES_HOST=localhost
+export POSTGRES_PORT=5432
+export POSTGRES_DBNAME=bigdata_lab
+export POSTGRES_USER=postgres
+export POSTGRES_PASSWORD=postgres
+export POSTGRES_DBINIT=${REPO_ROOT}/database/postgresql/ddl/db_init.sql
+export DUCKDB_PATH=./data/duckdb/bigdata_lab.duckdb
+export AIRFLOW_HOME=/opt/airflow/airflow_3.1.8
+export PENTAHO_HOME=/opt/pentaho/data-integration
 ```
 
 > **Importante:** el archivo `.env` es local y no debe versionarse en Git.

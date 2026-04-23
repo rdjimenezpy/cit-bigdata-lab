@@ -1,0 +1,27 @@
+# Forzar LF en todos los archivos de texto
+* text=auto eol=lf
+
+# Archivos Markdown y documentación siempre con LF
+*.md text eol=lf
+*.txt text eol=lf
+*.rst text eol=lf
+
+# Archivos Python siempre con LF
+*.py text eol=lf
+
+# Archivos de configuración
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.ini text eol=lf
+
+# Archivos que deben mantenerse binarios (sin conversión de EOL)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary
