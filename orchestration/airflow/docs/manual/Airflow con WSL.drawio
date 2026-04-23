@@ -1,0 +1,43 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.2.2 Chrome/134.0.6998.178 Electron/35.1.2 Safari/537.36" version="26.2.2">
+  <diagram name="Página-1" id="oEB42L1AaT_dHyGFeHYr">
+    <mxGraphModel dx="597" dy="358" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="500" pageHeight="200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="v0sym84aSiqtIj6D6KBV-1" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="106" y="31" width="237" height="237" as="geometry" />
+        </mxCell>
+        <mxCell id="v0sym84aSiqtIj6D6KBV-2" value="Windonws" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="112" y="40" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="v0sym84aSiqtIj6D6KBV-3" value="Postgres" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="268" y="45" width="52" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="v0sym84aSiqtIj6D6KBV-4" value="host-1 IP:&amp;nbsp;172.24.16.1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="187" y="4" width="141" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="v0sym84aSiqtIj6D6KBV-5" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="125" y="165" width="94" height="94" as="geometry" />
+        </mxCell>
+        <mxCell id="v0sym84aSiqtIj6D6KBV-6" value="&lt;font style=&quot;color: rgb(204, 102, 0);&quot;&gt;Ubuntu&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="125" y="167" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="v0sym84aSiqtIj6D6KBV-7" value="WSL" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="138" y="141" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="v0sym84aSiqtIj6D6KBV-8" value="&lt;b&gt;&lt;font style=&quot;color: rgb(234, 107, 102);&quot;&gt;Python&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="145" y="205" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="v0sym84aSiqtIj6D6KBV-9" value="Airflow" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="145" y="226" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="v0sym84aSiqtIj6D6KBV-11" value="host-2 IP:&amp;nbsp;172.24.31.70" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="234" y="209" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="v0sym84aSiqtIj6D6KBV-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.836;entryY=0.944;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="v0sym84aSiqtIj6D6KBV-3" target="v0sym84aSiqtIj6D6KBV-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

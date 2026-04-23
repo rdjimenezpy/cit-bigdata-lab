@@ -1,0 +1,26 @@
+Insert on rp_remuneraciones  (cost=816591.70..859353.97 rows=0 width=0) (actual time=292549.337..292549.343 rows=0 loops=1)
+  ->  Subquery Scan on "*SELECT*"  (cost=816591.70..859353.97 rows=196490 width=740) (actual time=281156.457..285558.167 rows=2785413 loops=1)
+        ->  Incremental Sort  (cost=816591.70..856406.62 rows=196490 width=732) (actual time=281156.433..284882.469 rows=2785413 loops=1)
+              Sort Key: rem.documento, rem.nivel_codigo, rem.entidad_codigo, rem.oee_codigo
+              Presorted Key: rem.documento
+              Full-sort Groups: 73018  Sort Method: quicksort  Average Memory: 36kB  Peak Memory: 36kB
+              Pre-sorted Groups: 3430  Sort Method: quicksort  Average Memory: 27kB  Peak Memory: 27kB
+              ->  Merge Join  (cost=816405.23..838190.16 rows=196490 width=732) (actual time=281156.120..282974.315 rows=2785413 loops=1)
+                    Merge Cond: (per.documento = rem.documento)
+                    ->  Index Scan using idx_persona_discapacidad_documento on tmp_persona_discapacidad per  (cost=0.42..17986.49 rows=341471 width=96) (actual time=0.036..89.264 rows=341471 loops=1)
+                    ->  Sort  (cost=816404.80..816405.09 rows=115 width=668) (actual time=281156.034..281847.226 rows=2785413 loops=1)
+                          Sort Key: rem.documento
+                          Sort Method: external sort  Disk: 716808kB
+                          ->  Nested Loop  (cost=25.91..816400.87 rows=115 width=668) (actual time=0.178..271467.835 rows=2785413 loops=1)
+                                Join Filter: (rem.objeto_gasto_codigo = pgn.objeto_gasto_codigo)
+                                Rows Removed by Join Filter: 1022246571
+                                ->  Seq Scan on pgn_gastos_clasificador pgn  (cost=0.00..18.68 rows=368 width=37) (actual time=0.012..1.146 rows=368 loops=1)
+                                ->  Materialize  (cost=25.91..815747.67 rows=115 width=635) (actual time=0.007..426.401 rows=2785413 loops=368)
+                                      ->  Hash Join  (cost=25.91..815747.10 rows=115 width=635) (actual time=0.156..1325.815 rows=2785413 loops=1)
+                                            Hash Cond: ((rem.nivel_codigo = sfp.nivel_codigo) AND (rem.entidad_codigo = sfp.entidad_codigo) AND (rem.oee_codigo = sfp.oee_codigo))
+                                            ->  Seq Scan on tmp_rp_remuneraciones rem  (cost=0.00..84549.13 rows=2785413 width=552) (actual time=0.017..355.854 rows=2785413 loops=1)
+                                            ->  Hash  (cost=18.33..18.33 rows=433 width=91) (actual time=0.133..0.135 rows=433 loops=1)
+                                                  Buckets: 1024  Batches: 1  Memory Usage: 61kB
+                                                  ->  Seq Scan on sfp_oee sfp  (cost=0.00..18.33 rows=433 width=91) (actual time=0.009..0.055 rows=433 loops=1)
+Planning Time: 0.392 ms
+Execution Time: 292658.888 ms (4.88min)

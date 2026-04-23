@@ -1,0 +1,61 @@
+# Activar Entorno Virtual:
+cd /home/richard/analytics/airflow_project/
+source venv/bin/activate
+
+
+# Activar Servicios:
+airflow webserver --port 8080
+airflow scheduler
+airflow triggerer
+
+# Iniciar el WebServer en Segundo Plano:
+airflow webserver -D
+
+# Iniciar el Scheduler en Segundo Plano:
+airflow scheduler -D
+
+# Iniciar el Scheduler en Segundo Plano:
+airflow triggerer -D
+
+# Detener el servidor
+pkill -f "airflow-webserver"
+
+pkill -f "airflow scheduler"
+kill -9 "airflow scheduler"
+
+# Especificar la configuración:
+airflow webserver -c /home/richard/airflow/airflow.cfg
+
+# Manual de Ayuda:
+airflow webserver --help
+airflow scheduler --help
+airflow triggerer --help
+
+# Autenticacion a la Consola Web:
+username / password: admin
+
+# Para enviar una señal al proceso de Apache Airflow y recargar la
+# configuración, puedes usar el comando kill con la señal HUP (hang up)
+kill -HUP <PID>
+
+kill -HUP $(pgrep -f "airflow-webserver")
+pgrep -f "airflow-webserver"
+pgrep -f "airflow scheduler"
+
+### EJEMPLOS ###
+# Iniciar el webserver en segundo plano y en el puerto 8082
+airflow webserver -D -p 8082
+
+### SCRIPT BASH ###
+# Nombre del proceso a buscar (puede variar según tu instalación)
+proceso_airflow="airflow webserver"
+
+# Puerto por defecto del webserver
+puerto_airflow="8080"
+
+# Comando para buscar el proceso
+comando_busqueda="ps aux | grep -v grep | grep '$proceso_airflow' | grep '$puerto_airflow'"
+
+ps aux | grep -v grep | grep 'airflow-webserver'
+
+ps aux | grep -v grep | grep 'airflow scheduler'

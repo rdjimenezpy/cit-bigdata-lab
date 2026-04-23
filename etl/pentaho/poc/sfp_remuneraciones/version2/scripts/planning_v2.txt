@@ -1,0 +1,17 @@
+Insert on rp_remuneraciones  (cost=1.14..8621.82 rows=0 width=0) (actual time=29632.414..29632.415 rows=0 loops=1)
+  ->  Nested Loop  (cost=1.14..8621.82 rows=196490 width=624) (actual time=6.646..25898.637 rows=2785413 loops=1)
+        ->  Nested Loop  (cost=0.71..2191.86 rows=115 width=552) (actual time=6.554..12081.902 rows=2785413 loops=1)
+              ->  Nested Loop  (cost=0.44..2157.36 rows=115 width=547) (actual time=0.187..4630.957 rows=2785413 loops=1)
+                    ->  Seq Scan on sfp_oee sfp  (cost=0.00..18.33 rows=433 width=91) (actual time=0.024..0.301 rows=433 loops=1)
+                    ->  Memoize  (cost=0.44..8.12 rows=1 width=552) (actual time=0.020..9.444 rows=6433 loops=433)
+                          Cache Key: sfp.nivel_codigo, sfp.entidad_codigo, sfp.oee_codigo
+                          Cache Mode: logical
+                          Hits: 0  Misses: 433  Evictions: 43  Overflows: 0  Memory Usage: 262145kB
+                          ->  Index Scan using idx_rp_remuneraciones_nivel_entidad_oee_codigo on tmp_rp_remuneraciones rem  (cost=0.43..8.11 rows=1 width=552) (actual time=0.018..5.249 rows=6433 loops=433)
+                                Index Cond: ((nivel_codigo = sfp.nivel_codigo) AND (entidad_codigo = sfp.entidad_codigo) AND (oee_codigo = sfp.oee_codigo))
+              ->  Index Scan using idx_ods_pgn_gastos_clasificador_objeto_gasto_codigo on pgn_gastos_clasificador pgn  (cost=0.27..0.29 rows=1 width=37) (actual time=0.002..0.002 rows=1 loops=2785413)
+                    Index Cond: (objeto_gasto_codigo = rem.objeto_gasto_codigo)
+        ->  Index Scan using idx_persona_discapacidad_documento on tmp_persona_discapacidad per  (cost=0.42..30.30 rows=1707 width=96) (actual time=0.005..0.005 rows=1 loops=2785413)
+              Index Cond: (documento = rem.documento)
+Planning Time: 3.262 ms
+Execution Time: 29654.632 ms

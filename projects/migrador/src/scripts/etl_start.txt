@@ -1,0 +1,9 @@
+
+
+# Ejecuta la transformación: un ejemplo de cómo ejecutar una transformación almacenada en un archivo
+cd D:\Programas\Pentaho\9.4\data-integration
+Pan.bat /file="D:\Git\fpuna\cit_bigdata_basico\laboratorio\pentaho\migrador_csv_to_db\src\transformaciones\csv_to_raw.ktr" /level:Basic \log:"D:\Git\fpuna\cit_bigdata_basico\laboratorio\pentaho\migrador_csv_to_db\logs\pan\log.txt"
+
+# Ejecutar un job
+cd D:\Programas\Pentaho\9.4\data-integration
+Kitche.bat /file="" /level:Basic \log:"D:\Git\fpuna\cit_bigdata_basico\laboratorio\pentaho\migrador_csv_to_db\logs\kitchen\log.txt"

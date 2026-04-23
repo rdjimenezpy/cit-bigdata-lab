@@ -1,0 +1,19 @@
+
+En el contexto del Estado Paraguayo, los términos Nivel, Entidad y OEE (Organismos y Entidades del Estado) 
+se utilizan para clasificar y organizar las instituciones públicas. Aquí está una descripción general:
+	
+	1. Nivel: Representa la categoría o jerarquía dentro de la estructura del Estado. Por ejemplo, puede incluir niveles 
+como el Gobierno Central, Gobiernos Departamentales, Municipios, entre otros.
+	
+	2. Entidad: Se refiere a las instituciones específicas que forman parte de un nivel. Por ejemplo, dentro del nivel 
+de Gobierno Central, las entidades podrían incluir ministerios, secretarías, y otras dependencias.
+	
+	3. OEE (Organismos y Entidades del Estado): Son las unidades administrativas que ejecutan funciones específicas 
+dentro de una entidad. Por ejemplo, una OEE podría ser una dirección, una agencia o una oficina que depende de una 
+entidad mayor.
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+En Pentaho Kettle (también conocido como Pentaho Data Integration), los jobs son flujos de trabajo que permiten coordinar y ejecutar tareas de manera 
+secuencial o condicional. Son útiles para gestionar procesos ETL (Extracción, Transformación y Carga) más complejos. Aquí tienes una descripción:

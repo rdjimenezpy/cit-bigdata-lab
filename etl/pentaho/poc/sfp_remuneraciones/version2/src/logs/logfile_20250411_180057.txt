@@ -1,0 +1,89 @@
+2025/04/11 18:00:57 - Job etl_sfp_remuneraciones - Using run configuration [Pentaho local]
+2025/04/11 18:00:57 - etl_sfp_remuneraciones - Starting entry [Truncar tablas]
+2025/04/11 18:00:58 - etl_sfp_remuneraciones - Starting entry [Buscar csv]
+2025/04/11 18:00:58 - Buscar csv - [0] file(s) were found in the result filenames...
+2025/04/11 18:00:58 - etl_sfp_remuneraciones - Starting entry [ExtraerDatos]
+2025/04/11 18:00:58 - ExtraerDatos - Using run configuration [Pentaho local]
+2025/04/11 18:00:58 - extraer_datos - Dispatching started for transformation [extraer_datos]
+2025/04/11 18:00:58 - Obtener archivo.0 - Finished processing (I=0, O=0, R=1, W=1, U=0, E=0)
+2025/04/11 18:00:58 - Leer datos.0 - Reading from 1 files.
+2025/04/11 18:00:58 - Leer datos.0 - Header row skipped in file 'file:///D:/Dataset/Opendata/SFP/Nomina/Procesar/funcionarios_2024_01.csv'
+2025/04/11 18:00:58 - Cargar datos crudos.0 - Detect client_encoding: UTF8
+2025/04/11 18:00:58 - Cargar datos crudos.0 - Launching command: COPY stage.sfp_nomina_temporal ( anho, mes, nivel_codigo, entidad_codigo, oee_codigo, documento, nombres, apellidos, sexo, fecha_nacimiento, discapacidad, tipo_discapacidad, estado, anho_ingreso, fecha_acto, linea, categoria, objeto_gasto_codigo, presupuestado, devengado )  FROM STDIN WITH CSV DELIMITER AS ';' QUOTE AS '"';
+2025/04/11 18:01:00 - Leer datos.0 - Line number : 50000
+2025/04/11 18:01:00 - Seleccionar variables.0 - linenr 50000
+2025/04/11 18:01:00 - Filtrar datos.0 - linenr 50000
+2025/04/11 18:01:00 - Leer datos.0 - Line number : 100000
+2025/04/11 18:01:00 - Seleccionar variables.0 - linenr 100000
+2025/04/11 18:01:00 - Filtrar datos.0 - linenr 100000
+2025/04/11 18:01:01 - Leer datos.0 - Line number : 150000
+2025/04/11 18:01:01 - Seleccionar variables.0 - linenr 150000
+2025/04/11 18:01:01 - Filtrar datos.0 - linenr 150000
+2025/04/11 18:01:02 - Leer datos.0 - Line number : 200000
+2025/04/11 18:01:02 - Seleccionar variables.0 - linenr 200000
+2025/04/11 18:01:02 - Filtrar datos.0 - linenr 200000
+2025/04/11 18:01:02 - Leer datos.0 - Line number : 250000
+2025/04/11 18:01:02 - Seleccionar variables.0 - linenr 250000
+2025/04/11 18:01:02 - Filtrar datos.0 - linenr 250000
+2025/04/11 18:01:03 - Leer datos.0 - Line number : 300000
+2025/04/11 18:01:03 - Seleccionar variables.0 - linenr 300000
+2025/04/11 18:01:03 - Filtrar datos.0 - linenr 300000
+2025/04/11 18:01:03 - Leer datos.0 - Line number : 350000
+2025/04/11 18:01:03 - Seleccionar variables.0 - linenr 350000
+2025/04/11 18:01:03 - Filtrar datos.0 - linenr 350000
+2025/04/11 18:01:04 - Leer datos.0 - Line number : 400000
+2025/04/11 18:01:04 - Seleccionar variables.0 - linenr 400000
+2025/04/11 18:01:04 - Filtrar datos.0 - linenr 400000
+2025/04/11 18:01:04 - Leer datos.0 - Line number : 450000
+2025/04/11 18:01:04 - Seleccionar variables.0 - linenr 450000
+2025/04/11 18:01:04 - Filtrar datos.0 - linenr 450000
+2025/04/11 18:01:05 - Leer datos.0 - Line number : 500000
+2025/04/11 18:01:05 - Seleccionar variables.0 - linenr 500000
+2025/04/11 18:01:05 - Filtrar datos.0 - linenr 500000
+2025/04/11 18:01:06 - Leer datos.0 - Line number : 550000
+2025/04/11 18:01:06 - Seleccionar variables.0 - linenr 550000
+2025/04/11 18:01:06 - Filtrar datos.0 - linenr 550000
+2025/04/11 18:01:06 - Leer datos.0 - Line number : 600000
+2025/04/11 18:01:06 - Seleccionar variables.0 - linenr 600000
+2025/04/11 18:01:06 - Filtrar datos.0 - linenr 600000
+2025/04/11 18:01:07 - Leer datos.0 - Line number : 650000
+2025/04/11 18:01:07 - Seleccionar variables.0 - linenr 650000
+2025/04/11 18:01:07 - Filtrar datos.0 - linenr 650000
+2025/04/11 18:01:08 - Leer datos.0 - Line number : 700000
+2025/04/11 18:01:08 - Seleccionar variables.0 - linenr 700000
+2025/04/11 18:01:08 - Filtrar datos.0 - linenr 700000
+2025/04/11 18:01:08 - Leer datos.0 - Line number : 750000
+2025/04/11 18:01:08 - Seleccionar variables.0 - linenr 750000
+2025/04/11 18:01:08 - Filtrar datos.0 - linenr 750000
+2025/04/11 18:01:09 - Leer datos.0 - Line number : 800000
+2025/04/11 18:01:09 - Seleccionar variables.0 - linenr 800000
+2025/04/11 18:01:09 - Filtrar datos.0 - linenr 800000
+2025/04/11 18:01:10 - Leer datos.0 - Line number : 850000
+2025/04/11 18:01:10 - Seleccionar variables.0 - linenr 850000
+2025/04/11 18:01:10 - Filtrar datos.0 - linenr 850000
+2025/04/11 18:01:10 - Leer datos.0 - Finished processing (I=891868, O=0, R=1, W=891867, U=0, E=0)
+2025/04/11 18:01:10 - Seleccionar variables.0 - Finished processing (I=0, O=0, R=891867, W=891867, U=0, E=0)
+2025/04/11 18:01:10 - Filtrar datos.0 - Finished processing (I=0, O=0, R=891867, W=891867, U=0, E=0)
+2025/04/11 18:01:10 - Eliminados.0 - Finished processing (I=0, O=0, R=2679, W=2679, U=0, E=0)
+2025/04/11 18:01:10 - Cargar datos crudos.0 - Finished processing (I=0, O=889188, R=889188, W=889188, U=0, E=0)
+2025/04/11 18:01:10 - extraer_datos - All transaction of database connection 'PostgreSQL-BIGDATA-LAB' where committed at the end of the transformation.
+2025/04/11 18:01:10 - etl_sfp_remuneraciones - Starting entry [TransformarDatos]
+2025/04/11 18:01:10 - TransformarDatos - Using run configuration [Pentaho local]
+2025/04/11 18:01:10 - transformar_datos - Dispatching started for transformation [transformar_datos]
+2025/04/11 18:01:31 - Transformar y limpiar datos.0 - Finished reading query, closing connection.
+2025/04/11 18:01:31 - Transformar y limpiar datos.0 - Finished processing (I=0, O=0, R=0, W=1, U=0, E=0)
+2025/04/11 18:01:31 - etl_sfp_remuneraciones - Starting entry [CargarDatos]
+2025/04/11 18:01:31 - CargarDatos - Using run configuration [Pentaho local]
+2025/04/11 18:01:31 - cargar_datos - Dispatching started for transformation [cargar_datos]
+2025/04/11 18:01:35 - Cargar datos.0 - Finished reading query, closing connection.
+2025/04/11 18:01:35 - Cargar datos.0 - Finished processing (I=0, O=0, R=0, W=1, U=0, E=0)
+2025/04/11 18:01:35 - etl_sfp_remuneraciones - Starting entry [Mover csv procesado]
+2025/04/11 18:01:35 - Mover csv procesado - 1 file(s) was(were) found in result filenames
+2025/04/11 18:01:35 - etl_sfp_remuneraciones - Starting entry [Finalizar flujo]
+2025/04/11 18:01:35 - etl_sfp_remuneraciones - Finished job entry [Finalizar flujo] (result=[true])
+2025/04/11 18:01:35 - etl_sfp_remuneraciones - Finished job entry [Mover csv procesado] (result=[true])
+2025/04/11 18:01:35 - etl_sfp_remuneraciones - Finished job entry [CargarDatos] (result=[true])
+2025/04/11 18:01:35 - etl_sfp_remuneraciones - Finished job entry [TransformarDatos] (result=[true])
+2025/04/11 18:01:35 - etl_sfp_remuneraciones - Finished job entry [ExtraerDatos] (result=[true])
+2025/04/11 18:01:35 - etl_sfp_remuneraciones - Finished job entry [Buscar csv] (result=[true])
+2025/04/11 18:01:35 - etl_sfp_remuneraciones - Finished job entry [Truncar tablas] (result=[true])
