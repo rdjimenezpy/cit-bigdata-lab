@@ -757,7 +757,7 @@ Este `README.md` debe evolucionar junto con las clases de laboratorios. Cada vez
 ## Autor
 * **Prof. Ing. Richard Daniel Jiménez Riveros**
 * **Correo:** [rjimenez@pol.una.py](mailto:rjimenez@pol.una.py)
-* **Departamento:** Enseñanza de Informática (DEI)
+* **Dependencia:** Dirección de Gestión del Centro de Innovación en TIC (PK)
 
 <div align="center">
   <p><em>¡Mucho éxito en este camino de convertirte en un especialista del ecosistema moderno de datos!</em></p>

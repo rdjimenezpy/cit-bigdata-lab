@@ -99,26 +99,7 @@ duckdb "${REPO_ROOT}/data/duckdb/eda.duckdb"
 CREATE SCHEMA IF NOT EXISTS raw;
 ```
 
-### Paso 9. Volcar la fuente en bruto al esquema `raw`
-
-```sql
--- duckdb "/opt/repo/cit-bigdata-lab/data/duckdb/eda.duckdb"
-
-CREATE OR REPLACE TABLE raw.funcionarios_2026_1 AS
-SELECT *
-FROM read_csv(
-    '/opt/repo/cit-bigdata-lab/data/staged/sfp_funcionarios/2026_01/funcionarios_2026_1_utf8.csv',
-    header = true,
-    all_varchar = true,
-    sample_size = -1,
-    normalize_names = false,
-    encoding = 'utf-8'
-);
-```
-
----
-
-## Guía de implementación del modelo de datos base
+## Paso 9. Implementación del modelo de datos base
 
 ```sql
 -- duckdb "/opt/repo/cit-bigdata-lab/data/duckdb/eda.duckdb"
@@ -161,6 +142,23 @@ CREATE TABLE raw.funcionarios_2026_1(
     correo VARCHAR,
     profesion VARCHAR,
     motivo_movimiento VARCHAR
+);
+```
+
+### Paso 10. Volcar la fuente en bruto al esquema `raw`
+
+```sql
+-- duckdb "/opt/repo/cit-bigdata-lab/data/duckdb/eda.duckdb"
+
+CREATE OR REPLACE TABLE raw.funcionarios_2026_1 AS
+SELECT *
+FROM read_csv(
+    '/opt/repo/cit-bigdata-lab/data/staged/sfp_funcionarios/2026_01/funcionarios_2026_1_utf8.csv',
+    header = true,
+    all_varchar = true,
+    sample_size = -1,
+    normalize_names = false,
+    encoding = 'utf-8'
 );
 ```
 

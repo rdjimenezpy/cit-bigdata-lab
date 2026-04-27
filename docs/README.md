@@ -14,7 +14,7 @@
 **Dependencia:** Centro de Innovación TIC (PK)  
 **Área:** Big Data   **Nivel:** Básico  
 **Curso:** Introducción a Big Data   **Enfoque:** Fundamentos y Pipelines de Datos con Python  
-**Docente:** Prof. Ing. Richard D. Jiménez-R.  
+**Docente:** Ing. Richard D. Jiménez-R.  
 **Contacto:** rjimenez@pol.una.py
 
 ---
@@ -71,13 +71,22 @@ docs/
 │   ├── 03_python_pyenv_venv.md
 │   ├── 04_git_github_flujo_basico.md
 │   ├── 05_postgresql_15_administracion_basica.md
-│   └── 06_duckdb_comandos_esenciales.md
+│   ├── 06_duckdb_comandos_esenciales.md
+│   └── 07_guia_practica_eda_duckdb.md
 ├── tutoriales/
-│   ├── 01_instalacion_wsl2_ubuntu.md
-│   ├── 02_instalacion_python_3_12_5_pyenv.md
-│   ├── 03_instalacion_postgresql_15_wsl2_ubuntu.md
-│   ├── 04_instalacion_postgresql_15_windows.md
-│   └── 05_instalacion_duckdb_wsl2_ubuntu.md
+│   ├── 00_guia_rapida_entorno_de_trabajo.md
+│   ├── 01_instalacion_y_configuracion_base_wsl2_con_ubuntu.md
+│   ├── 02_instalacion_python_3_12_5_con_pyenv_en_ubuntu_wsl2.md
+│   ├── 03_instalacion_configuracion_y_flujo_basico_git_github.md
+│   ├── 04_instalacion_postgresql_15_wsl2_ubuntu
+│   ├── 05_instalacion_y_configuracion_postgresql_15_en_windows_11.md
+│   ├── 06_instalacion_y_configuracion_duckdb_en_ubuntu_wsl2.md
+│   ├── 07_instalacion_configuracion_pdi_10_windows_y_ubuntu.md
+│   └── 08_autenticacion_github_ssh.md
+├── contexto_fuente/
+│   ├── 00_diccionario_fuente_funcionarios_sfp.md
+│   └── 01_resumen_fuente_funcionarios_sfp.md
+├── wikis/
 └── README.md
 ```
 
@@ -85,6 +94,8 @@ docs/
 
 - `cheatsheet/` → hojas de referencia rápida con comandos, sintaxis y recordatorios operativos.
 - `tutoriales/` → documentos paso a paso para instalación, configuración y uso base de herramientas del laboratorio.
+- `contexto_fuente/` → documentaciones de relevamiento sobre los conjuntos de datos de los proyectos.
+- `wikis/` → documentos educativos resúmenes que permiten a estudiantes y docentes construir conocimiento colectivo.
 - `README.md` → página de aterrizaje documental de la carpeta `docs/`.
 
 ---
@@ -115,11 +126,13 @@ Antes de incorporar nuevos archivos a esta subcarpeta, verificar que:
 
 ## Archivos o elementos recomendados
 
-| Elemento | Obligatorio | Observación |
-|---|---|---|
-| `README.md` | Sí | Documento guía de la carpeta `docs/`. |
-| `cheatsheet/` | Recomendado | Agrupa hojas de referencia rápida para uso operativo. |
-| `tutoriales/` | Recomendado | Agrupa tutoriales paso a paso y guías de instalación/configuración. |
+| Elemento | Obligatorio | Observación                                                                    |
+|---|---|--------------------------------------------------------------------------------|
+| `README.md` | Sí | Documento guía de la carpeta `docs/`.                                          |
+| `cheatsheet/` | Recomendado | Agrupa hojas de referencia rápida para uso operativo.                          |
+| `tutoriales/` | Recomendado | Agrupa tutoriales paso a paso y guías de instalación/configuración.            |
+| `contexto_fuente/` | Recomendado | Agrupa documentos sobre el diccionario de datos de la fuente de origen.        |
+| `wikis/` | Recomendado | Agrupa documentos de conceptos fundamentales para el aula.                     |
 | `assets/` | Opcional | Solo si la documentación requiere recursos específicos locales de esta carpeta. |
 
 ---

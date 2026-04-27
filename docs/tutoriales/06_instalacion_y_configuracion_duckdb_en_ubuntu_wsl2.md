@@ -14,7 +14,7 @@
 **Dependencia:** Centro de Innovación TIC (PK)  
 **Área:** Big Data   **Nivel:** Básico  
 **Curso:** Introducción a Big Data   **Enfoque:** Fundamentos y Pipelines de Datos con Python  
-**Docente:** Prof. Ing. Richard D. Jiménez-R.  
+**Docente:** Ing. Richard D. Jiménez-R.  
 **Contacto:** rjimenez@pol.una.py
 
 ---
@@ -542,10 +542,58 @@ SELECT * FROM duckdb_extensions();
 
 ### 8.11 Paso 11 — Probar DuckDB desde Python
 
-Crea un script de prueba:
+Primero verifica tener instalado:
+
+```bash
+# Activar entorno virtual de Python para evitar conflictos con otros paquetes
+source /opt/repo/cit-bigdata-lab/.venv/bin/activate
+
+# Tener instalado Python 3.12 o superior
+python --version
+
+# Tener instalado DuckDB 1.4.4 o superior
+duckdb --version
+
+# Opcional: Usa pip para instalar el paquete oficial
+pip install duckdb
+
+# Opcional: Si quieres soporte adicional para pandas y numpy
+pip install duckdb pandas numpy
+```
+
+Crea un script de prueba rápida de instalación:
 
 ```bash
 mkdir -p /opt/repo/cit-bigdata-lab/python/scripts
+nano /opt/repo/cit-bigdata-lab/python/scripts/test_duckdb.py
+```
+
+Contenido sugerido:
+
+```python
+import duckdb
+import pandas as pd
+
+# Crear conexión en memoria
+con = duckdb.connect()
+
+# Ejecutar consulta simple
+print(con.execute("SELECT 42 AS respuesta").fetchall())
+
+# Usar con pandas
+df = pd.DataFrame({"valores": [1, 2, 3]})
+print(con.execute("SELECT avg(valores) FROM df").fetchall())
+```
+
+Ejecuta:
+
+```bash
+python /opt/repo/cit-bigdata-lab/scripts/python/test_duckdb.py
+```
+
+Ahora, crea otro script de prueba:
+
+```bash
 nano /opt/repo/cit-bigdata-lab/python/scripts/check_duckdb.py
 ```
 
@@ -554,9 +602,13 @@ Contenido sugerido:
 ```python
 import duckdb
 
-DB_PATH = "/opt/repo/cit-bigdata-lab/data/duckdb/lab_python.duckdb"
+DB_PATH = "/opt/repo/cit-bigdata-lab/data/duckdb/mi_base.duckdb"
 
-con = duckdb.connect(DB_PATH)
+# Conexión a base en memoria (vacía)
+con = duckdb.connect()
+
+# Si quieres persistencia en disco:
+# con = duckdb.connect(DB_PATH)
 
 con.execute(
     """
@@ -593,7 +645,6 @@ con.close()
 Ejecuta el script:
 
 ```bash
-source /opt/repo/cit-bigdata-lab/.venv/bin/activate
 python /opt/repo/cit-bigdata-lab/scripts/python/check_duckdb.py
 ```
 

@@ -14,7 +14,7 @@
 **Dependencia:** Centro de Innovación TIC (PK)  
 **Área:** Big Data   **Nivel:** Básico  
 **Curso:** Introducción a Big Data   **Enfoque:** Fundamentos y Pipelines de Datos con Python  
-**Docente:** Prof. Ing. Richard D. Jiménez-R.  
+**Docente:** Ing. Richard D. Jiménez-R.  
 **Contacto:** rjimenez@pol.una.py
 
 ---
