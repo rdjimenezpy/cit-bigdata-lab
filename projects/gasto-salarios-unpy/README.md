@@ -68,7 +68,7 @@ gasto-salarios-unpy/
 │   │   │   ├── clasificador_gastos.csv
 │   │   │   ├── clasificador_oee.csv
 │   │   │   └── regimen_salarial_py.csv
-│   │   └── cotizacion/
+│   │   └── cotizaciones/
 │   │       └── cotizacion_usd_mensual.csv
 │   ├── staging/
 │   ├── processed/
@@ -115,27 +115,68 @@ gasto-salarios-unpy/
 
 ---
 
-## 4. Fuentes de datos esperadas
+## 4. Fuentes de datos de origen
 
 Colocar los archivos CSV en las rutas indicadas:
 
+### Paso 1. Descargar los archivos CSV correspondientes a la nómina de funcionarios públicos del periodo 2025.
+
+El script descarga los archivos de enero a diciembre de 2025, valida el ZIP, descomprime en temp, verifica/convierte a UTF-8, guarda en:
+
+```bash
+export BASH_PATH=/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/scripts/bash
+cd ${BASH_PATH}
+sudo chmod +x 01_download_csv_funcionarios_to_raw.sh
+./01_download_csv_funcionarios_to_raw.sh
+```
+
+Resultado esperado:
+
 ```text
-data/raw/funcionarios/funcionarios_2025_1.csv
-data/raw/funcionarios/funcionarios_2025_2.csv
-data/raw/funcionarios/funcionarios_2025_3.csv
-data/raw/funcionarios/funcionarios_2025_4.csv
-data/raw/funcionarios/funcionarios_2025_5.csv
-data/raw/funcionarios/funcionarios_2025_6.csv
-data/raw/funcionarios/funcionarios_2025_7.csv
-data/raw/funcionarios/funcionarios_2025_8.csv
-data/raw/funcionarios/funcionarios_2025_9.csv
-data/raw/funcionarios/funcionarios_2025_10.csv
-data/raw/funcionarios/funcionarios_2025_11.csv
-data/raw/funcionarios/funcionarios_2025_12.csv
-data/raw/clasificadores/clasificador_gastos.csv
-data/raw/clasificadores/clasificador_oee.csv
-data/raw/clasificadores/regimen_salarial_py.csv
-data/raw/cotizacion/cotizacion_usd_mensual.csv
+data/raw/funcionarios/funcionarios_2025_1_utf8.csv
+data/raw/funcionarios/funcionarios_2025_2_utf8.csv
+data/raw/funcionarios/funcionarios_2025_3_utf8.csv
+data/raw/funcionarios/funcionarios_2025_4_utf8.csv
+data/raw/funcionarios/funcionarios_2025_5_utf8.csv
+data/raw/funcionarios/funcionarios_2025_6_utf8.csv
+data/raw/funcionarios/funcionarios_2025_7_utf8.csv
+data/raw/funcionarios/funcionarios_2025_8_utf8.csv
+data/raw/funcionarios/funcionarios_2025_9_utf8.csv
+data/raw/funcionarios/funcionarios_2025_10_utf8.csv
+data/raw/funcionarios/funcionarios_2025_11_utf8.csv
+data/raw/funcionarios/funcionarios_2025_12_utf8.csv
+```
+
+### Paso 2. Descargar los archivos CSV correspondientes a los clasificadores del Presupuesto General de la Nación.
+
+```bash
+export BASH_PATH=/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/scripts/bash
+cd ${BASH_PATH}
+sudo chmod +x 02_download_csv_clasificadores_to_raw.sh
+./02_download_csv_clasificadores_to_raw.sh
+```
+
+Resultado esperado:
+
+```text
+data/raw/clasificadores/clasificador_gastos_utf8.csv
+data/raw/clasificadores/clasificador_oee_utf8.csv
+data/raw/clasificadores/regimen_salarial_py_utf8.csv
+```
+
+### Paso 3. Descargar los archivos CSV correspondientes a las cotizaciones de referencia del BCP.
+
+```bash
+export BASH_PATH=/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/scripts/bash
+cd ${BASH_PATH}
+sudo chmod +x 03_download_csv_cotizacion_to_raw.sh
+./03_download_csv_cotizacion_to_raw.sh
+```
+
+Resultado esperado:
+
+```text
+data/raw/cotizaciones/cotizacion_usd_mensual_utf8.csv
 ```
 
 ### Nota sobre versionado de datos
@@ -168,13 +209,23 @@ duckdb --version
 Crear la base local y ejecutar los scripts por orden:
 
 ```bash
-duckdb database/remuneraciones.duckdb < sql/00_setup/00_create_schemas.sql
-duckdb database/remuneraciones.duckdb < sql/01_raw/01_raw_ingesta.sql
-duckdb database/remuneraciones.duckdb < sql/02_staging/02_staging_limpieza.sql
-duckdb database/remuneraciones.duckdb < sql/03_core/03_core_modelo.sql
-duckdb database/remuneraciones.duckdb < sql/04_datamart/04_datamart_obt.sql
-duckdb database/remuneraciones.duckdb < sql/04_datamart/05_datamart_agregados.sql
-duckdb database/remuneraciones.duckdb < sql/05_quality/06_data_quality_checks.sql
+# Definir ruta del proyecto:
+export PATH_BASE=/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy
+
+# Si no existe, créalo vacío:
+duckdb ${PATH_BASE}/database/unpy.duckdb
+
+# Verifica que el archivo exista:
+ls -l ${PATH_BASE}/database/unpy.duckdb
+
+# Ejecutar los scripts por orden:
+duckdb ${PATH_BASE}/database/unpy.duckdb < ${PATH_BASE}/sql/00_setup/00_create_schemas.sql
+duckdb ${PATH_BASE}/database/unpy.duckdb < ${PATH_BASE}/sql/01_raw/01_raw_ingesta.sql
+duckdb ${PATH_BASE}/database/unpy.duckdb < ${PATH_BASE}/sql/02_staging/02_staging_limpieza.sql
+duckdb ${PATH_BASE}/database/unpy.duckdb < ${PATH_BASE}/sql/03_core/03_core_modelo.sql
+duckdb ${PATH_BASE}/database/unpy.duckdb < ${PATH_BASE}/sql/04_datamart/04_datamart_obt.sql
+duckdb ${PATH_BASE}/database/unpy.duckdb < ${PATH_BASE}/sql/04_datamart/05_datamart_agregados.sql
+duckdb ${PATH_BASE}/database/unpy.duckdb < ${PATH_BASE}/sql/05_quality/06_data_quality_checks.sql
 ```
 
 O ejecutar todo con el script base:

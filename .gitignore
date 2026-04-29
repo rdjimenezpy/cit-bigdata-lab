@@ -128,3 +128,9 @@ temp/
 # LOGS
 # ---------------------------------------------------------
 ./projects/dwh/etl/logs/
+
+# ---------------------------------------------------------
+# gasto-salarios-unpy
+# ---------------------------------------------------------
+projects/gasto-salarios-unpy/data/
+projects/gasto-salarios-unpy/database/

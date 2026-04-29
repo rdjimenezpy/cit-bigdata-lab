@@ -11,7 +11,7 @@
 -- Nota:
 --   Ejecutar primero sobre la base DuckDB del proyecto.
 --   Ejemplo:
---     duckdb remuneraciones.duckdb < sql/00_create_schemas.sql
+--     duckdb ./database/unpy.duckdb < ./sql/00_setup/00_create_schemas.sql
 -- ============================================================
 
 -- ============================================================

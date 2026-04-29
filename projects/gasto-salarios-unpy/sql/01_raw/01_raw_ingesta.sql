@@ -3,12 +3,11 @@
 -- Capa RAW: lectura directa de CSV en DuckDB
 --
 -- Supuesto de estructura de carpetas:
---   ./data/funcionarios_2025_3_utf8_sample10k.csv
---   ./data/funcionarios_2025_3_utf8_sample10k_modelo.csv
---   ./data/clasificador_gastos_utf8.csv
---   ./data/clasificador_oee_utf8.csv
---   ./data/cotizacion_usd_mensual.csv
---   ./data/regimen_salarial_py.csv
+--   ./data/raw/funcionarios/funcionarios_AAAA_MM_utf8.csv
+--   ./data/raw/clasificadores/clasificador_gastos_utf8.csv
+--   ./data/raw/clasificadores/clasificador_oee_utf8.csv
+--   ./data/raw/clasificadores/regimen_salarial_py.csv
+--   ./data/raw/cotizaciones/cotizacion_usd_mensual.csv
 --
 -- Importante:
 --   La capa raw conserva los datos prácticamente como vienen del archivo.
@@ -20,13 +19,24 @@
 -- ============================================================
 -- Ejecutar manualmente si se desea revisar la inferencia de DuckDB:
 --
--- DESCRIBE SELECT * FROM read_csv_auto('./data/funcionarios_2025_3_utf8_sample10k.csv', header=true, sample_size=-1);
--- DESCRIBE SELECT * FROM read_csv_auto('./data/funcionarios_2025_3_utf8_sample10k_modelo.csv', header=true, sample_size=-1);
--- DESCRIBE SELECT * FROM read_csv_auto('./data/clasificador_gastos_utf8.csv', header=true, sample_size=-1);
--- DESCRIBE SELECT * FROM read_csv_auto('./data/regimen_salarial_py.csv', header=true, sample_size=-1);
+-- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/funcionarios/funcionarios_2025_1_utf8.csv', header=true, sample_size=-1);
+-- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/funcionarios/funcionarios_2025_2_utf8.csv', header=true, sample_size=-1);
+-- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/funcionarios/funcionarios_2025_3_utf8.csv', header=true, sample_size=-1);
+-- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/funcionarios/funcionarios_2025_4_utf8.csv', header=true, sample_size=-1);
+-- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/funcionarios/funcionarios_2025_5_utf8.csv', header=true, sample_size=-1);
+-- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/funcionarios/funcionarios_2025_6_utf8.csv', header=true, sample_size=-1);
+-- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/funcionarios/funcionarios_2025_7_utf8.csv', header=true, sample_size=-1);
+-- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/funcionarios/funcionarios_2025_8_utf8.csv', header=true, sample_size=-1);
+-- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/funcionarios/funcionarios_2025_9_utf8.csv', header=true, sample_size=-1);
+-- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/funcionarios/funcionarios_2025_10_utf8.csv', header=true, sample_size=-1);
+-- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/funcionarios/funcionarios_2025_11_utf8.csv', header=true, sample_size=-1);
+-- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/funcionarios/funcionarios_2025_12_utf8.csv', header=true, sample_size=-1);
 --
--- SELECT * FROM read_csv_auto('./data/funcionarios_2025_3_utf8_sample10k_modelo.csv', header=true, all_varchar=true) LIMIT 10;
--- SUMMARIZE SELECT * FROM read_csv_auto('./data/funcionarios_2025_3_utf8_sample10k_modelo.csv', header=true, all_varchar=true, sample_size=-1);
+-- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/clasificadores/clasificador_gastos_utf8.csv', header=true, sample_size=-1);
+-- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/clasificadores/clasificador_oee_utf8.csv', header=true, sample_size=-1);
+-- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/clasificadores/cotizacion_usd_mensual.utf8.csv', header=true, sample_size=-1);
+--
+-- SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/cotizaciones/cotizacion_usd_mensual.utf8.csv', header=true, all_varchar=true) LIMIT 10;
 
 -- ============================================================
 -- 1) Fuente principal completa: funcionarios origen
@@ -34,7 +44,7 @@
 CREATE OR REPLACE TABLE raw.funcionarios_origen_src AS
 SELECT *
 FROM read_csv_auto(
-    './data/funcionarios_2025_3_utf8_sample10k.csv',
+    '/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/funcionarios/funcionarios_2025_1_utf8.csv',
     header = true,
     all_varchar = true,
     sample_size = -1,
@@ -46,15 +56,36 @@ FROM read_csv_auto(
 -- 2) Fuente principal depurada para modelado
 -- ============================================================
 CREATE OR REPLACE TABLE raw.funcionarios_modelo_src AS
-SELECT *
-FROM read_csv_auto(
-    './data/funcionarios_2025_3_utf8_sample10k_modelo.csv',
+SELECT
+    anho,
+    mes,
+    nivel,
+    entidad,
+    oee,
+    documento,
+    nombres,
+    apellidos,
+    estado,
+    anho_ingreso,
+    sexo,
+    discapacidad,
+    tipo_discapacidad,
+    fuente_financiamiento,
+    objeto_gasto,
+    concepto,
+    presupuestado,
+    devengado,
+    fecha_nacimiento,
+    fecha_acto
+FROM read_csv_auto( -- Uso de Comodines
+    '/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/funcionarios/funcionarios_2025_*_utf8.csv',
     header = true,
     all_varchar = true,
     sample_size = -1,
     normalize_names = false,
     encoding = 'utf-8'
-);
+)
+WHERE nivel = '28';
 
 -- ============================================================
 -- 3) Clasificador de gastos públicos

@@ -22,7 +22,7 @@ set -Eeuo pipefail
 
 YEAR="2025"
 
-BASE_DIR="/opt/repo/cit-bigdata-lab/projects/data"
+BASE_DIR="/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data"
 TEMP_DIR="${BASE_DIR}/temp"
 RAW_DIR="${BASE_DIR}/raw/funcionarios"
 

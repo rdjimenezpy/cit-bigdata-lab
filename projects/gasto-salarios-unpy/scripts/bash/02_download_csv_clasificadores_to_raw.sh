@@ -21,7 +21,7 @@ set -Eeuo pipefail
 # Configuración general
 # ------------------------------------------------------------------------------
 
-BASE_DIR="/opt/repo/cit-bigdata-lab/projects/data"
+BASE_DIR="/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data"
 TEMP_DIR="${BASE_DIR}/temp"
 RAW_DIR="${BASE_DIR}/raw/clasificadores"
 
@@ -39,6 +39,7 @@ FALLBACK_ENCODINGS=("ISO-8859-1" "WINDOWS-1252")
 FILES=(
   "clasificador_gastos.csv|1qjm1eRfJY6DGnvaAyJQRs4WH8FImoj2M|clasificador_gastos_utf8.csv"
   "clasificador_oee.csv|1nX3u_0DcVm2lsiPE4feSM2gBZR6QBrd0|clasificador_oee_utf8.csv"
+  "regimen_salarial_py.csv|1yDdWrO9j0M6fcy2fssd6Q7RMZlVkDG6G|regimen_salarial_py_utf8.csv"
 )
 
 # ------------------------------------------------------------------------------

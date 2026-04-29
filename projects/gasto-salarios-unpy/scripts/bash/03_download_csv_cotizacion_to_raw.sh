@@ -5,7 +5,7 @@
 #   Descarga el archivo CSV de cotización USD mensual desde Google Drive,
 #   lo guarda temporalmente en la carpeta temp, valida si está en UTF-8,
 #   convierte a UTF-8 cuando corresponde, guarda el resultado normalizado
-#   en raw/clasificadores y elimina el CSV temporal.
+#   en raw/cotizaciones y elimina el CSV temporal.
 #
 # Uso:
 #   chmod +x download_csv_cotizacion_to_raw.sh
@@ -21,9 +21,9 @@ set -Eeuo pipefail
 # Configuración general
 # ------------------------------------------------------------------------------
 
-BASE_DIR="/opt/repo/cit-bigdata-lab/projects/data"
+BASE_DIR="/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data"
 TEMP_DIR="${BASE_DIR}/temp"
-RAW_DIR="${BASE_DIR}/raw/clasificadores"
+RAW_DIR="${BASE_DIR}/raw/cotizaciones"
 
 TEMP_FILE_NAME="cotizacion_usd_mensual.csv"
 RAW_FILE_NAME="cotizacion_usd_mensual.utf8.csv"
