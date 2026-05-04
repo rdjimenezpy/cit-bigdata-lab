@@ -121,7 +121,7 @@ Colocar los archivos CSV en las rutas indicadas:
 
 ### Paso 1. Descargar los archivos CSV correspondientes a la nómina de funcionarios públicos del periodo 2025.
 
-El script descarga los archivos de enero a diciembre de 2025, valida el ZIP, descomprime en temp, verifica/convierte a UTF-8, guarda en:
+El script `01_download_csv_funcionarios_to_raw.sh` descarga los archivos de enero a diciembre de 2025, valida el ZIP, descomprime en temp, verifica/convierte a UTF-8, guarda en:
 
 ```bash
 export BASH_PATH=/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/scripts/bash
@@ -212,11 +212,11 @@ Crear la base local y ejecutar los scripts por orden:
 # Definir ruta del proyecto:
 export PATH_BASE=/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy
 
-# Si no existe, créalo vacío:
-duckdb ${PATH_BASE}/database/unpy.duckdb
-
 # Verifica que el archivo exista:
 ls -l ${PATH_BASE}/database/unpy.duckdb
+
+# Si no existe, créalo vacío:
+duckdb ${PATH_BASE}/database/unpy.duckdb
 
 # Ejecutar los scripts por orden:
 duckdb ${PATH_BASE}/database/unpy.duckdb < ${PATH_BASE}/sql/00_setup/00_create_schemas.sql
