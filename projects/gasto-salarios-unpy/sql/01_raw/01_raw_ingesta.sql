@@ -34,9 +34,9 @@
 --
 -- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/clasificadores/clasificador_gastos_utf8.csv', header=true, sample_size=-1);
 -- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/clasificadores/clasificador_oee_utf8.csv', header=true, sample_size=-1);
--- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/clasificadores/cotizacion_usd_mensual.utf8.csv', header=true, sample_size=-1);
+-- DESCRIBE SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/clasificadores/cotizacion_usd_mensual_utf8.csv', header=true, sample_size=-1);
 --
--- SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/cotizaciones/cotizacion_usd_mensual.utf8.csv', header=true, all_varchar=true) LIMIT 10;
+-- SELECT * FROM read_csv_auto('/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/cotizaciones/cotizacion_usd_mensual_utf8.csv', header=true, all_varchar=true) LIMIT 10;
 
 -- ============================================================
 -- 1) Fuente principal completa: funcionarios origen
@@ -72,7 +72,6 @@ SELECT
     tipo_discapacidad,
     fuente_financiamiento,
     objeto_gasto,
-    concepto,
     presupuestado,
     devengado,
     fecha_nacimiento,
@@ -93,7 +92,7 @@ WHERE nivel = '28';
 CREATE OR REPLACE TABLE raw.clasificador_gastos_src AS
 SELECT *
 FROM read_csv_auto(
-    './data/clasificador_gastos_utf8.csv',
+    '/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/clasificadores/clasificador_gastos_utf8.csv',
     header = true,
     all_varchar = true,
     sample_size = -1,
@@ -111,18 +110,38 @@ FROM read_csv_auto(
 -- ============================================================
 CREATE OR REPLACE TABLE raw.clasificador_oee_src AS
 SELECT
-    REPLACE(linea_raw, CHR(65279), '') AS linea_raw
-FROM read_csv(
-    './data/clasificador_oee_utf8.csv',
-    header = false,
-    columns = {'linea_raw': 'VARCHAR'},
-    quote = '"',
-    escape = '"',
-    ignore_errors = false
+    codigo_nivel,
+    descripcion_nivel,
+    codigo_entidad,
+    descripcion_entidad,
+    codigo_oee,
+    descripcion_oee,
+    descripcion_corta
+FROM read_csv_auto(
+    '/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/clasificadores/clasificador_oee_utf8.csv',
+    header = true,
+    all_varchar = true,
+    sample_size = -1,
+    normalize_names = false,
+    encoding = 'utf-8'
 );
 
 -- ============================================================
--- 5) Cotización mensual USD
+-- 5) Régimen salarial de Paraguay
+-- ============================================================
+CREATE OR REPLACE TABLE raw.regimen_salarial_py_src AS
+SELECT *
+FROM read_csv_auto(
+    '/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/clasificadores/regimen_salarial_py_utf8.csv',
+    header = true,
+    all_varchar = true,
+    sample_size = -1,
+    normalize_names = false,
+    encoding = 'utf-8'
+);
+
+-- ============================================================
+-- 6) Cotización mensual USD
 --
 -- Supuesto de columnas esperadas:
 --   anho, mes, cotizacion_usd
@@ -133,21 +152,7 @@ FROM read_csv(
 CREATE OR REPLACE TABLE raw.cotizacion_usd_mensual_src AS
 SELECT *
 FROM read_csv_auto(
-    './data/cotizacion_usd_mensual.csv',
-    header = true,
-    all_varchar = true,
-    sample_size = -1,
-    normalize_names = false,
-    encoding = 'utf-8'
-);
-
--- ============================================================
--- 6) Régimen salarial de Paraguay
--- ============================================================
-CREATE OR REPLACE TABLE raw.regimen_salarial_py_src AS
-SELECT *
-FROM read_csv_auto(
-    './data/regimen_salarial_py.csv',
+    '/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/cotizaciones/cotizacion_usd_mensual_utf8.csv',
     header = true,
     all_varchar = true,
     sample_size = -1,
@@ -158,7 +163,7 @@ FROM read_csv_auto(
 -- ============================================================
 -- 7) Validaciones básicas RAW: cantidad de registros
 -- ============================================================
-CREATE OR REPLACE TABLE raw.validacion_raw_cantidad_registros AS
+CREATE OR REPLACE TABLE  audit.validacion_raw_cantidad_registros AS
 SELECT 'raw.funcionarios_origen_src' AS tabla, COUNT(*) AS total_registros FROM raw.funcionarios_origen_src
 UNION ALL
 SELECT 'raw.funcionarios_modelo_src' AS tabla, COUNT(*) AS total_registros FROM raw.funcionarios_modelo_src
@@ -174,7 +179,7 @@ SELECT 'raw.regimen_salarial_py_src' AS tabla, COUNT(*) AS total_registros FROM 
 -- ============================================================
 -- 8) Validaciones básicas RAW: cantidad de columnas
 -- ============================================================
-CREATE OR REPLACE TABLE raw.validacion_raw_cantidad_columnas AS
+CREATE OR REPLACE TABLE audit.validacion_raw_cantidad_columnas AS
 SELECT
     table_schema || '.' || table_name AS tabla,
     COUNT(*) AS total_columnas

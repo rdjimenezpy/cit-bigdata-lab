@@ -175,7 +175,7 @@ COPY (
     FROM eda.raw.funcionarios_2026_1 
     USING SAMPLE 100000 ROWS
 ) 
-TO '/opt/repo/cit-bigdata-lab/data/exported/funcionarios_2026_1_sample100k.csv' 
+TO '/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/raw/funcionarios/sample_funcionarios_modelo.csv' 
 (HEADER, DELIMITER ',');
 ```
 

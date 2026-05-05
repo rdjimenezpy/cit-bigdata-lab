@@ -242,6 +242,19 @@ make all
 make export
 ```
 
+Para generar una muestra aleatoria y exportarla a un archivo CSV
+
+```sql 
+-- Ejecutar la exportación con una muestra aleatoria de 10,000 registros
+COPY (
+    SELECT * 
+    FROM raw.funcionarios_modelo_src
+    USING SAMPLE 10000 ROWS
+) 
+TO '/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/exports/csv/sample_funcionarios_modelo.csv' 
+(HEADER, DELIMITER ',');
+```
+
 ---
 
 ## 7. Tabla analítica principal

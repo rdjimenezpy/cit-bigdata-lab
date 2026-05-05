@@ -26,15 +26,15 @@ TEMP_DIR="${BASE_DIR}/temp"
 RAW_DIR="${BASE_DIR}/raw/cotizaciones"
 
 TEMP_FILE_NAME="cotizacion_usd_mensual.csv"
-RAW_FILE_NAME="cotizacion_usd_mensual.utf8.csv"
+RAW_FILE_NAME="cotizacion_usd_mensual_utf8.csv"
 
 TEMP_CSV_PATH="${TEMP_DIR}/${TEMP_FILE_NAME}"
 RAW_CSV_PATH="${RAW_DIR}/${RAW_FILE_NAME}"
 
 # ID del archivo en Google Drive.
 # URL original:
-# https://drive.google.com/file/d/1qjm1eRfJY6DGnvaAyJQRs4WH8FImoj2M/view?usp=sharing
-GOOGLE_DRIVE_FILE_ID="1qjm1eRfJY6DGnvaAyJQRs4WH8FImoj2M"
+# https://drive.google.com/file/d/1l6c7a7hUrb7yq2dfv-0YdS25124ODOh5/view?usp=sharing
+GOOGLE_DRIVE_FILE_ID="1l6c7a7hUrb7yq2dfv-0YdS25124ODOh5"
 
 # Usar true porque el script base utiliza curl -k.
 # En un entorno productivo debería usarse false para validar certificados TLS.
