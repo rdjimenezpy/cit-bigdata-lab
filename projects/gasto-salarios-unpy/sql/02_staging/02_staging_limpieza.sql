@@ -122,6 +122,8 @@ SELECT *
 FROM typed;
 
 -- Tabla deduplicada para joins seguros por objeto de gasto.
+-- La idea es crear una tabla limpia, sin duplicados, que se pueda usar en joins sin riesgo de tener múltiples filas
+-- para el mismo 'objeto_gasto_codigo'.
 CREATE OR REPLACE TABLE staging.clasificador_gastos_dedup AS
 SELECT * EXCLUDE (rn)
 FROM (
@@ -130,14 +132,15 @@ FROM (
         ROW_NUMBER() OVER (
             PARTITION BY objeto_gasto_codigo
             ORDER BY
-                CASE WHEN objeto_gasto_descripcion IS NOT NULL THEN 0 ELSE 1 END,
-                grupo_codigo,
-                subgrupo_codigo
-        ) AS rn
+                -- (porque el CASE devuelve 0 si hay descripción, 1 si no)
+                CASE WHEN objeto_gasto_descripcion IS NOT NULL THEN 0 ELSE 1 END, -- Primero se priorizan las filas donde objeto_gasto_descripcion no es nula
+                grupo_codigo, -- Luego se ordena por grupo_codigo
+                subgrupo_codigo -- Finalmente por subgrupo_codigo
+        ) AS rn -- asigna un número consecutivo a cada fila dentro de cada grupo definido por PARTITION BY objeto_gasto_codigo
     FROM staging.clasificador_gastos g
-    WHERE objeto_gasto_codigo IS NOT NULL
-)
-WHERE rn = 1;
+    WHERE objeto_gasto_codigo IS NOT NULL -- descarta filas sin código de gasto
+) -- Esto asegura que la fila con mejor información (descripción no nula y ordenada por grupo/subgrupo) quede con rn = 1
+WHERE rn = 1; -- Esto elimina duplicados y deja una sola fila representativa por código
 
 -- ============================================================
 -- 2) Clasificador OEE normalizado
@@ -292,7 +295,7 @@ WITH src AS (
              AND to_integer_py(mes) BETWEEN 1 AND 12
             THEN make_date(to_integer_py(anho), to_integer_py(mes), 1)
             ELSE NULL
-        END AS fecha_regimen,
+        END AS fecha_vigencia_inicio,
         normalizar_texto(mes_nombre) AS mes_nombre,
         to_decimal_py(salario_minimo_mensual) AS salario_minimo_mensual_gs,
         to_decimal_py(salario_por_dia) AS salario_por_dia_gs,
@@ -310,7 +313,7 @@ WITH src AS (
             WHEN LOWER(TRIM(CAST(vigente AS VARCHAR))) IN ('true', 't', '1', 'si', 'sí', 's', 'yes', 'y') THEN TRUE
             WHEN LOWER(TRIM(CAST(vigente AS VARCHAR))) IN ('false', 'f', '0', 'no', 'n') THEN FALSE
             ELSE NULL
-        END AS vigente,
+        END AS es_vigente,
         CURRENT_TIMESTAMP AS fecha_carga,
         'regimen_salarial_py_utf8.csv' AS fuente_archivo,
         md5(
@@ -319,9 +322,57 @@ WITH src AS (
             COALESCE(CAST(salario_minimo_mensual AS VARCHAR), '')
         ) AS hash_regimen_salarial
     FROM src
+) , ordenado AS (
+    SELECT
+        *,
+        LEAD(fecha_vigencia_inicio) OVER (ORDER BY fecha_vigencia_inicio) AS siguiente_fecha_vigencia_inicio
+    FROM typed
 )
-SELECT *
-FROM typed;
+SELECT
+    -- Clave natural temporal del régimen.
+    anho,
+    mes,
+    mes_nombre,
+
+    -- Periodo de vigencia calculado
+    fecha_vigencia_inicio,
+    COALESCE(
+        (siguiente_fecha_vigencia_inicio - INTERVAL 1 DAY)::DATE,
+        DATE '9999-12-31'
+    ) AS fecha_vigencia_fin,
+
+    -- Estado de vigencia calculado y comparación contra la bandera fuente.
+    CASE
+        WHEN siguiente_fecha_vigencia_inicio IS NULL THEN TRUE
+        ELSE FALSE
+    END AS vigente_calculado,
+    es_vigente,
+
+    CASE
+        WHEN siguiente_fecha_vigencia_inicio IS NULL THEN 'VIGENTE'
+        ELSE 'HISTORICO'
+    END AS estado_vigencia,
+
+    -- Medidas monetarias del régimen salarial
+    salario_minimo_mensual_gs,
+    salario_por_dia_gs,
+    jornal_por_dia_gs,
+    salario_por_hora_gs,
+    salario_nocturno_mensual_gs,
+    salario_nocturno_por_dia_gs,
+    jornal_nocturno_por_dia_gs,
+    salario_nocturno_por_hora_gs,
+    asignacion_familiar_por_hijo_gs,
+    aporte_patronal_gs,
+    aporte_empleado_gs,
+    salario_neto_gs,
+
+    -- Auditoría básica de carga
+    fecha_carga,
+    fuente_archivo,
+    hash_regimen_salarial
+FROM ordenado
+ORDER BY fecha_vigencia_inicio;
 
 CREATE OR REPLACE TABLE staging.regimen_salarial_py_dedup AS
 SELECT * EXCLUDE (rn)
@@ -330,7 +381,7 @@ FROM (
         r.*,
         ROW_NUMBER() OVER (
             PARTITION BY anho, mes
-            ORDER BY fecha_regimen DESC NULLS LAST, vigente DESC NULLS LAST
+            ORDER BY fecha_vigencia_inicio DESC NULLS LAST, es_vigente DESC NULLS LAST
         ) AS rn
     FROM staging.regimen_salarial_py r
     WHERE anho IS NOT NULL
@@ -339,13 +390,13 @@ FROM (
 WHERE rn = 1;
 
 -- ============================================================
--- 5) Fuente principal: funcionarios_modelo normalizado
+-- 5) Fuente principal: funcionarios_modelo normalizado y limpio
 --
 -- Grano de entrada:
 --   anho + mes + nivel + entidad + oee + documento + objeto_gasto
 --   con potenciales repeticiones según la fuente.
 -- ============================================================
-CREATE OR REPLACE TABLE staging.funcionarios_modelo AS
+CREATE OR REPLACE TABLE staging.funcionarios_modelo_clean AS
 WITH src AS (
     SELECT
         anho,
@@ -378,9 +429,9 @@ WITH src AS (
             THEN make_date(to_integer_py(anho), to_integer_py(mes), 1)
             ELSE NULL
         END AS fecha_periodo,
-        to_integer_py(nivel) AS nivel,
-        to_integer_py(entidad) AS entidad,
-        to_integer_py(oee) AS oee,
+        to_integer_py(nivel) AS codigo_nivel,
+        to_integer_py(entidad) AS codigo_entidad,
+        to_integer_py(oee) AS codigo_oee,
         normalizar_texto(documento) AS documento,
         md5(COALESCE(normalizar_texto(documento), '')) AS documento_hash,
         normalizar_texto(nombres) AS nombres,
@@ -388,19 +439,19 @@ WITH src AS (
         normalizar_texto(estado) AS estado,
         to_integer_py(anho_ingreso) AS anho_ingreso,
         normalizar_texto(sexo) AS sexo,
-        normalizar_texto(discapacidad) AS discapacidad,
-        normalizar_texto(tipo_discapacidad) AS tipo_discapacidad,
-        to_integer_py(fuente_financiamiento) AS fuente_financiamiento,
-        to_integer_py(objeto_gasto) AS objeto_gasto,
+        normalizar_texto(discapacidad) AS es_discapacitado,
+        normalizar_texto(tipo_discapacidad) AS descripcion_discapacidad,
+        to_integer_py(fuente_financiamiento) AS codigo_fuente_financiamiento,
+        to_integer_py(objeto_gasto) AS codigo_objeto_gasto,
         to_decimal_py(presupuestado) AS presupuestado_gs,
         to_decimal_py(devengado) AS devengado_gs,
         COALESCE(to_decimal_py(devengado), to_decimal_py(presupuestado), 0) AS monto_base_calculo_gs,
         fecha_nacimiento AS fecha_nacimiento_raw,
         to_date_sfp(fecha_nacimiento) AS fecha_nacimiento,
         fecha_acto AS fecha_acto_raw,
-        to_date_sfp(fecha_acto) AS fecha_acto,
+        to_date_sfp(fecha_acto) AS fecha_acto_administrativo,
         CURRENT_TIMESTAMP AS fecha_carga,
-        'funcionarios_2025_*_utf8.csv' AS fuente_archivo,
+        concat('funcionarios_2025_', mes, '_utf8.csv') AS fuente_archivo,
         md5(
             COALESCE(CAST(anho AS VARCHAR), '') || '|' ||
             COALESCE(CAST(mes AS VARCHAR), '') || '|' ||
@@ -416,7 +467,8 @@ WITH src AS (
     FROM src
 )
 SELECT *
-FROM typed;
+FROM typed
+WHERE monto_base_calculo_gs > 0 -- Eliminamos aquellos registros sin presupuesto;
 
 
 -- ============================================================
@@ -438,37 +490,48 @@ FROM typed;
 -- ============================================================
 CREATE OR REPLACE TABLE staging.funcionarios_modelo_ext AS
 SELECT
+    -- Dimensión con variables temporales
     f.anho,
     f.mes,
     f.fecha_periodo,
-	--
-    f.nivel,
+	-- Dimensión con variables de jerarquía institucional
+    f.codigo_nivel,
     o.descripcion_nivel,
-    f.entidad,
+    f.codigo_entidad,
     o.descripcion_entidad,
-    f.oee,
+    f.codigo_oee,
     o.descripcion_oee,
-    o.descripcion_corta AS descripcion_corta_oee,
-	--
+    o.descripcion_corta AS sigla_institucional,
+	-- Dimensión con variables de identificación personal
     f.documento,
     f.documento_hash,
     f.nombres,
     f.apellidos,
-    f.estado,
-    f.anho_ingreso,
     f.sexo,
-    f.discapacidad,
-    --COALESCE(f.tipo_discapacidad, 'NO APLICA') AS tipo_discapacidad,
+    f.fecha_nacimiento_raw,
+    f.fecha_nacimiento,
+    -- Dimensión con variables laborales y de clasificación administrativa
+    f.estado,
+    -- Dimensión con variables de perfil personal y trayectoria
+    f.anho_ingreso,
+    CASE
+        WHEN f.es_discapacitado = 'SI' THEN TRUE
+        ELSE FALSE
+    END AS es_discapacitado,
    	CASE
-	    	WHEN (f.tipo_discapacidad IS NULL AND f.discapacidad = 'NO') THEN 'NA'
-	    	WHEN (f.tipo_discapacidad IS NULL AND f.discapacidad = 'SI') THEN 'DESCONOCIDO'
-    		ELSE 'NA'
-    END AS tipo_discapacidad,
-    f.fuente_financiamiento,
-	--
-    f.objeto_gasto,
-    g.objeto_gasto_descripcion,
-    g.objeto_gasto_descripcion AS concepto,
+        WHEN (f.descripcion_discapacidad IS NULL AND f.es_discapacitado = 'NO') THEN 'NO_APLICA'
+	    WHEN (f.descripcion_discapacidad IS NULL AND f.es_discapacitado = 'SI') THEN 'SIN_DATO'
+    	ELSE 'DESCONOCIDO'
+    END AS descripcion_discapacidad,
+	-- Dimensión de variables remunerativas y presupuestarias
+    f.codigo_fuente_financiamiento,
+    CASE
+        WHEN f.codigo_fuente_financiamiento = 10 THEN 'TESORO_PUBLICO'
+        WHEN f.codigo_fuente_financiamiento = 20 THEN 'PRESTAMOS'
+        WHEN f.codigo_fuente_financiamiento = 30 THEN 'INGRESOS_PROPIOS'
+        ELSE 'DESCONOCIDO'
+    END AS descripcion_fuente_financiamiento,
+    f.codigo_objeto_gasto,
     g.objeto_gasto_descripcion AS concepto_remunerativo,
     g.subgrupo_codigo,
     g.subgrupo_descripcion,
@@ -477,28 +540,11 @@ SELECT
     g.control_financiero_codigo,
     g.control_financiero_descripcion,
     g.clasificacion_gasto_descripcion,
-    -- Campos no disponibles en raw.funcionarios_modelo_src.
-    -- Se mantienen como NULL técnico para evitar quiebres temporales en scripts
-    -- downstream, pero no deben usarse como dimensiones analíticas hasta contar
-    -- con una fuente confiable.
-    CAST(NULL AS VARCHAR) AS cargo,
-    CAST(NULL AS VARCHAR) AS funcion,
-    CAST(NULL AS VARCHAR) AS carga_horaria,
-    CAST(NULL AS VARCHAR) AS linea,
-    CAST(NULL AS INTEGER) AS linea_codigo,
-    CAST(NULL AS VARCHAR) AS categoria,
-    CAST(NULL AS VARCHAR) AS movimiento,
-    CAST(NULL AS VARCHAR) AS lugar,
-    CAST(NULL AS TIMESTAMP) AS fec_ult_modif_ts,
-    CAST(NULL AS VARCHAR) AS uri,
-    CAST(NULL AS VARCHAR) AS correo,
-    CAST(NULL AS VARCHAR) AS profesion,
-    CAST(NULL AS VARCHAR) AS motivo_movimiento,
-	--
+    -- Medidas remunerativas y presupuestarias (PYG)
     f.presupuestado_gs,
     f.devengado_gs,
     f.monto_base_calculo_gs,
-	--
+	-- Medidas remunerativas y presupuestarias (USD)
     c.cotizacion_usd_promedio,
     CASE
         WHEN c.cotizacion_usd_promedio IS NULL OR c.cotizacion_usd_promedio = 0 THEN NULL
@@ -512,8 +558,8 @@ SELECT
         WHEN c.cotizacion_usd_promedio IS NULL OR c.cotizacion_usd_promedio = 0 THEN NULL
         ELSE ROUND(f.monto_base_calculo_gs / c.cotizacion_usd_promedio, 2)
     END AS monto_base_calculo_usd,
-	--
-    r.fecha_regimen,
+	-- Dimensión de variables del régimen salarial en Paraguay
+    r.fecha_vigencia_inicio AS fecha_regimen,
     r.mes_nombre AS mes_nombre_regimen,
     r.salario_minimo_mensual_gs,
     r.salario_por_dia_gs,
@@ -527,30 +573,28 @@ SELECT
     r.aporte_patronal_gs,
     r.aporte_empleado_gs,
     r.salario_neto_gs,
-    r.vigente AS regimen_vigente,
-	--
-    f.fecha_nacimiento_raw,
-    f.fecha_nacimiento,
+    r.es_vigente AS regimen_vigente,
+    -- Dimensión de variables de fecha, trazabilidad y referencia técnica
     f.fecha_acto_raw,
-    f.fecha_acto,
-	--
+    f.fecha_acto_administrativo AS fecha_acto_administrativo,
+	-- Dimensión de tipificación del personal en función a la codificación del documento
     CASE
         WHEN f.documento IS NULL OR f.documento = '' THEN 'SIN_DOCUMENTO'
         WHEN REGEXP_MATCHES(f.documento, 'VACAN|VACANC|VACANTE') THEN 'VACANCIA'
         WHEN REGEXP_MATCHES(f.documento, '^[0-9]+$') THEN 'DOCUMENTO_NUMERICO'
         ELSE 'DOCUMENTO_NO_CONVENCIONAL'
     END AS tipo_registro_documento,
-	--
+	-- Dimensión degenerada para rubros vacantes
     CASE
         WHEN f.documento IS NULL OR f.documento = '' THEN TRUE
         WHEN REGEXP_MATCHES(f.documento, 'VACAN|VACANC|VACANTE') THEN TRUE
         ELSE FALSE
     END AS es_vacancia,
-	--
+	-- Dimensión degenerada
     CASE
         WHEN g.objeto_gasto_codigo IS NULL THEN TRUE ELSE FALSE
     END AS tiene_objeto_gasto_sin_clasificar,
-	--
+	-- Dimensión degenerada
     CASE
         WHEN o.codigo_oee IS NULL THEN TRUE ELSE FALSE
     END AS tiene_oee_sin_clasificar,
@@ -558,39 +602,51 @@ SELECT
     CASE
         WHEN c.cotizacion_usd_promedio IS NULL THEN TRUE ELSE FALSE
     END AS tiene_cotizacion_usd_faltante,
-	--
+	-- Dimensión degenerada
     CASE
         WHEN r.salario_minimo_mensual_gs IS NULL THEN TRUE ELSE FALSE
     END AS tiene_regimen_salarial_faltante,
-	--
+	-- Variables de auditoría básica de carga
     f.fecha_carga,
     f.fuente_archivo,
     f.hash_registro,
-	--
     md5(
         COALESCE(CAST(f.anho AS VARCHAR), '') || '|' ||
         COALESCE(CAST(f.mes AS VARCHAR), '') || '|' ||
-        COALESCE(CAST(f.nivel AS VARCHAR), '') || '|' ||
-        COALESCE(CAST(f.entidad AS VARCHAR), '') || '|' ||
-        COALESCE(CAST(f.oee AS VARCHAR), '') || '|' ||
+        COALESCE(CAST(f.codigo_nivel AS VARCHAR), '') || '|' ||
+        COALESCE(CAST(f.codigo_entidad AS VARCHAR), '') || '|' ||
+        COALESCE(CAST(f.codigo_oee AS VARCHAR), '') || '|' ||
         COALESCE(CAST(f.documento AS VARCHAR), '') || '|' ||
-        COALESCE(CAST(f.objeto_gasto AS VARCHAR), '') || '|' ||
+        COALESCE(CAST(f.codigo_objeto_gasto AS VARCHAR), '') || '|' ||
         COALESCE(CAST(f.presupuestado_gs AS VARCHAR), '') || '|' ||
         COALESCE(CAST(f.devengado_gs AS VARCHAR), '')
     ) AS hash_registro_enriquecido
-FROM staging.funcionarios_modelo f
+    -- Campos no disponibles en raw.funcionarios_modelo_src.
+    -- Se mantienen como NULL técnico para evitar quiebres temporales en scripts
+    -- downstream, pero no deben usarse como dimensiones analíticas hasta contar
+    -- con una fuente confiable.
+    --CAST(NULL AS VARCHAR) AS cargo,
+    --CAST(NULL AS VARCHAR) AS funcion,
+    --CAST(NULL AS VARCHAR) AS carga_horaria,
+    --CAST(NULL AS VARCHAR) AS linea,
+    --CAST(NULL AS VARCHAR) AS categoria,
+    --CAST(NULL AS VARCHAR) AS movimiento,
+    --CAST(NULL AS VARCHAR) AS lugar,
+    --CAST(NULL AS VARCHAR) AS correo,
+    --CAST(NULL AS VARCHAR) AS profesion,
+    --CAST(NULL AS VARCHAR) AS motivo_movimiento,
+FROM staging.funcionarios_modelo_clean f
 LEFT JOIN staging.clasificador_gastos_dedup g
-       ON f.objeto_gasto = g.objeto_gasto_codigo
+       ON f.codigo_objeto_gasto = g.objeto_gasto_codigo
 LEFT JOIN staging.clasificador_oee_dedup o
-       ON f.nivel = o.codigo_nivel
-      AND f.entidad = o.codigo_entidad
-      AND f.oee = o.codigo_oee
+       ON f.codigo_nivel = o.codigo_nivel
+      AND f.codigo_entidad = o.codigo_entidad
+      AND f.codigo_oee = o.codigo_oee
 LEFT JOIN staging.cotizacion_usd_mensual_dedup c
        ON f.anho = c.anho
       AND f.mes = c.mes
 LEFT JOIN staging.regimen_salarial_py_dedup r
-       ON f.anho = r.anho
-      AND f.mes = r.mes;
+       ON f.fecha_periodo BETWEEN fecha_vigencia_inicio AND fecha_vigencia_fin;
 
 -- Alias semántico recomendado para nuevos scripts CORE.
 CREATE OR REPLACE VIEW staging.funcionarios_modelo_enriquecido AS

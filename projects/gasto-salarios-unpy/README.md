@@ -242,7 +242,7 @@ make all
 make export
 ```
 
-Para generar una muestra aleatoria y exportarla a un archivo CSV
+Para generar una muestra aleatoria y exportarla a un archivo CSV:
 
 ```sql 
 -- Ejecutar la exportación con una muestra aleatoria de 10,000 registros
@@ -253,6 +253,12 @@ COPY (
 ) 
 TO '/opt/repo/cit-bigdata-lab/projects/gasto-salarios-unpy/data/exports/csv/sample_funcionarios_modelo.csv' 
 (HEADER, DELIMITER ',');
+```
+
+Ruta de conexión a la base de datos DuckDB:
+
+```bash
+\\wsl.localhost\Ubuntu\opt\repo\cit-bigdata-lab\projects\gasto-salarios-unpy\database\unpy.duckdb
 ```
 
 ---

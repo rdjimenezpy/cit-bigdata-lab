@@ -132,3 +132,32 @@ SELECT
     'ok',
     NULL,
     'Esquemas y macros creados o reemplazados correctamente';
+
+-- ============================================================
+-- 5) Calcular estadísticas descriptivas de una columna
+-- ============================================================
+CREATE OR REPLACE MACRO stats(col) AS (
+    struct_pack(
+        total := count(col),
+        minimo := min(col),
+        maximo := max(col),
+        promedio := avg(col),
+        desviacion := stddev(col)
+    )
+);
+
+-- Uso correcto
+-- SELECT stats(presupuestado_gs::int)
+-- FROM staging.funcionarios_modelo_ext;
+
+-- ============================================================
+-- 6) Crear macro para formatear con separador de miles
+-- ============================================================
+CREATE OR REPLACE MACRO format_miles(x) AS (
+    printf('%,.0f', x)
+);
+
+-- Si quieres adaptarlo al estilo Paraguay
+CREATE OR REPLACE MACRO format_py(x) AS (
+    replace(replace(printf('%,.2f', x), ',', '.'), '.', ',')
+);
