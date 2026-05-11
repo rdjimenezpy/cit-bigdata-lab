@@ -84,7 +84,7 @@ FROM read_csv_auto( -- Uso de Comodines
     normalize_names = false,
     encoding = 'utf-8'
 )
-WHERE nivel = '28';
+WHERE nivel = '28'; -- UNIVERSIDADES NACIONALES
 
 -- ============================================================
 -- 3) Clasificador de gastos públicos

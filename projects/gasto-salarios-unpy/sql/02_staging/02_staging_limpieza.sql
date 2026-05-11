@@ -47,7 +47,7 @@
 --   staging.clasificador_oee
 --   staging.cotizacion_usd_mensual
 --   staging.regimen_salarial_py
---   staging.funcionarios_modelo_ext
+--   staging.funcionarios_modelo_enriquecido
 --   staging.funcionarios_modelo_enriquecido
 --
 -- Vistas/Tables de control:
@@ -488,7 +488,7 @@ WHERE monto_base_calculo_gs > 0 -- Eliminamos aquellos registros sin presupuesto
 --   regla de "último régimen vigente anterior o igual al periodo", puede
 --   resolverse con una tabla dimensional de régimen mensual aplicable.
 -- ============================================================
-CREATE OR REPLACE TABLE staging.funcionarios_modelo_ext AS
+CREATE OR REPLACE TABLE staging.funcionarios_modelo_enriquecido AS
 SELECT
     -- Dimensión con variables temporales
     f.anho,
@@ -509,7 +509,7 @@ SELECT
     f.apellidos,
     f.sexo,
     f.fecha_nacimiento_raw,
-    f.fecha_nacimiento,
+    COALESCE(f.fecha_nacimiento, '1900-01-01') AS fecha_nacimiento, -- fecha_de_control 1900-01-01
     -- Dimensión con variables laborales y de clasificación administrativa
     f.estado,
     -- Dimensión con variables de perfil personal y trayectoria
@@ -544,6 +544,7 @@ SELECT
     f.presupuestado_gs,
     f.devengado_gs,
     f.monto_base_calculo_gs,
+    (f.presupuestado_gs - f.devengado_gs) AS descuento_gs,
 	-- Medidas remunerativas y presupuestarias (USD)
     c.cotizacion_usd_promedio,
     CASE
@@ -576,8 +577,8 @@ SELECT
     r.es_vigente AS regimen_vigente,
     -- Dimensión de variables de fecha, trazabilidad y referencia técnica
     f.fecha_acto_raw,
-    f.fecha_acto_administrativo AS fecha_acto_administrativo,
-	-- Dimensión de tipificación del personal en función a la codificación del documento
+    COALESCE(f.fecha_acto_administrativo, '1900-01-01' ) AS fecha_acto_administrativo, -- fecha_de_control 1900-01-01
+    -- Dimensión de tipificación del personal en función a la codificación del documento
     CASE
         WHEN f.documento IS NULL OR f.documento = '' THEN 'SIN_DOCUMENTO'
         WHEN REGEXP_MATCHES(f.documento, 'VACAN|VACANC|VACANTE') THEN 'VACANCIA'
@@ -648,18 +649,13 @@ LEFT JOIN staging.cotizacion_usd_mensual_dedup c
 LEFT JOIN staging.regimen_salarial_py_dedup r
        ON f.fecha_periodo BETWEEN fecha_vigencia_inicio AND fecha_vigencia_fin;
 
--- Alias semántico recomendado para nuevos scripts CORE.
-CREATE OR REPLACE VIEW staging.funcionarios_modelo_enriquecido AS
-SELECT *
-FROM staging.funcionarios_modelo_ext;
-
 -- ============================================================
 -- 7) Controles de staging: conteo de registros
 -- ============================================================
 CREATE OR REPLACE VIEW staging.vw_control_staging_registros AS
-SELECT 'staging.funcionarios_modelo' AS tabla, COUNT(*) AS total_registros FROM staging.funcionarios_modelo
+SELECT 'staging.funcionarios_modelo_clean' AS tabla, COUNT(*) AS total_registros FROM staging.funcionarios_modelo_clean
 UNION ALL
-SELECT 'staging.funcionarios_modelo_ext' AS tabla, COUNT(*) AS total_registros FROM staging.funcionarios_modelo_ext
+SELECT 'staging.funcionarios_modelo_enriquecido' AS tabla, COUNT(*) AS total_registros FROM staging.funcionarios_modelo_enriquecido
 UNION ALL
 SELECT 'staging.clasificador_gastos' AS tabla, COUNT(*) AS total_registros FROM staging.clasificador_gastos
 UNION ALL
@@ -692,19 +688,19 @@ SELECT
     SUM(CASE WHEN anho IS NULL THEN 1 ELSE 0 END) AS registros_anho_nulo,
     SUM(CASE WHEN mes IS NULL THEN 1 ELSE 0 END) AS registros_mes_nulo,
     SUM(CASE WHEN fecha_periodo IS NULL THEN 1 ELSE 0 END) AS registros_fecha_periodo_nula,
-    SUM(CASE WHEN nivel IS NULL THEN 1 ELSE 0 END) AS registros_nivel_nulo,
-    SUM(CASE WHEN entidad IS NULL THEN 1 ELSE 0 END) AS registros_entidad_nula,
-    SUM(CASE WHEN oee IS NULL THEN 1 ELSE 0 END) AS registros_oee_nulo,
+    SUM(CASE WHEN codigo_nivel IS NULL THEN 1 ELSE 0 END) AS registros_nivel_nulo,
+    SUM(CASE WHEN codigo_entidad IS NULL THEN 1 ELSE 0 END) AS registros_entidad_nula,
+    SUM(CASE WHEN codigo_oee IS NULL THEN 1 ELSE 0 END) AS registros_oee_nulo,
     SUM(CASE WHEN documento IS NULL THEN 1 ELSE 0 END) AS registros_documento_nulo,
-    SUM(CASE WHEN objeto_gasto IS NULL THEN 1 ELSE 0 END) AS registros_objeto_gasto_nulo,
+    SUM(CASE WHEN codigo_objeto_gasto IS NULL THEN 1 ELSE 0 END) AS registros_objeto_gasto_nulo,
     SUM(CASE WHEN presupuestado_gs IS NULL THEN 1 ELSE 0 END) AS registros_presupuestado_nulo,
     SUM(CASE WHEN devengado_gs IS NULL THEN 1 ELSE 0 END) AS registros_devengado_nulo,
     SUM(CASE WHEN presupuestado_gs < 0 THEN 1 ELSE 0 END) AS registros_presupuestado_negativo,
     SUM(CASE WHEN devengado_gs < 0 THEN 1 ELSE 0 END) AS registros_devengado_negativo,
     SUM(CASE WHEN fecha_nacimiento IS NULL THEN 1 ELSE 0 END) AS registros_fecha_nacimiento_nula,
-    SUM(CASE WHEN fecha_acto IS NULL THEN 1 ELSE 0 END) AS registros_fecha_acto_nula,
+    SUM(CASE WHEN fecha_acto_administrativo IS NULL THEN 1 ELSE 0 END) AS registros_fecha_acto_nula,
     COUNT(DISTINCT hash_registro) AS total_hash_registro_distintos
-FROM staging.funcionarios_modelo;
+FROM staging.funcionarios_modelo_enriquecido;
 
 -- ============================================================
 -- 9) Controles de staging: resultado de enriquecimiento
@@ -712,7 +708,7 @@ FROM staging.funcionarios_modelo;
 CREATE OR REPLACE VIEW staging.vw_control_staging_enriquecimiento AS
 SELECT
     COUNT(*) AS total_registros,
-    SUM(CASE WHEN objeto_gasto_descripcion IS NULL THEN 1 ELSE 0 END) AS registros_sin_concepto_remunerativo,
+    SUM(CASE WHEN concepto_remunerativo IS NULL THEN 1 ELSE 0 END) AS registros_sin_concepto_remunerativo,
     SUM(CASE WHEN descripcion_nivel IS NULL THEN 1 ELSE 0 END) AS registros_sin_descripcion_nivel,
     SUM(CASE WHEN descripcion_entidad IS NULL THEN 1 ELSE 0 END) AS registros_sin_descripcion_entidad,
     SUM(CASE WHEN descripcion_oee IS NULL THEN 1 ELSE 0 END) AS registros_sin_descripcion_oee,
@@ -722,7 +718,7 @@ SELECT
     SUM(CASE WHEN tiene_oee_sin_clasificar THEN 1 ELSE 0 END) AS registros_oee_sin_clasificar,
     SUM(CASE WHEN tiene_cotizacion_usd_faltante THEN 1 ELSE 0 END) AS registros_cotizacion_usd_faltante,
     SUM(CASE WHEN tiene_regimen_salarial_faltante THEN 1 ELSE 0 END) AS registros_regimen_salarial_faltante
-FROM staging.funcionarios_modelo_ext;
+FROM staging.funcionarios_modelo_enriquecido;
 
 -- ============================================================
 -- 10) Control específico: duplicados técnicos por grano de componente
@@ -731,23 +727,23 @@ CREATE OR REPLACE VIEW staging.vw_control_staging_duplicados_componente AS
 SELECT
     anho,
     mes,
-    nivel,
-    entidad,
-    oee,
-    documento_hash,
-    objeto_gasto,
+    codigo_nivel,
+    codigo_entidad,
+    codigo_oee,
+    documento,
+    codigo_objeto_gasto,
     presupuestado_gs,
     devengado_gs,
     COUNT(*) AS cantidad_registros
-FROM staging.funcionarios_modelo_ext
+FROM staging.funcionarios_modelo_enriquecido
 GROUP BY
     anho,
     mes,
-    nivel,
-    entidad,
-    oee,
-    documento_hash,
-    objeto_gasto,
+    codigo_nivel,
+    codigo_entidad,
+    codigo_oee,
+    documento,
+    codigo_objeto_gasto,
     presupuestado_gs,
     devengado_gs
 HAVING COUNT(*) > 1;
