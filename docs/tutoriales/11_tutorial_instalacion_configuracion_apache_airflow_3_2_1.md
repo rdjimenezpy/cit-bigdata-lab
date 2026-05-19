@@ -387,6 +387,8 @@ export AIRFLOW_HOME=/opt/airflow/airflow_3.2.1
 export AIRFLOW_CONFIG=/opt/airflow/airflow_3.2.1/configs/airflow.cfg
 export AIRFLOW_VERSION=3.2.1
 export PYTHON_VERSION=3.12
+export POSTGRES_IPHOST=172.24.16.1
+export POSTGRES_PORT=5432
 
 cd /opt/airflow/airflow_3.2.1
 
@@ -487,20 +489,21 @@ export PYTHON_VERSION="$(python -c 'import sys; print(f"{sys.version_info.major}
 export CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_VERSION}.txt"
 
 pip install \
-  "apache-airflow[async,standard,postgres,statsd,sftp,fab]==${AIRFLOW_VERSION}" \
+  "apache-airflow[async,standard,postgres,statsd,sftp,fab,pandas]==${AIRFLOW_VERSION}" \
   --constraint "${CONSTRAINT_URL}"
 ```
 
 **Extras usados:**
 
-| Extra | Uso |
-|---|---|
-| `async` | Workers asíncronos para Gunicorn/API Server. |
-| `standard` | Operadores y hooks estándar. |
-| `postgres` | Integración con PostgreSQL. |
-| `statsd` | Métricas vía StatsD. |
-| `sftp` | Hooks, operadores y sensores SFTP. |
-| `fab` | Flask AppBuilder Auth Manager para gestión clásica de usuarios y roles. |
+| Extra      | Uso                                                                     |
+|------------|-------------------------------------------------------------------------|
+| `async`    | Workers asíncronos para Gunicorn/API Server.                            |
+| `standard` | Operadores y hooks estándar.                                            |
+| `postgres` | Integración con PostgreSQL.                                             |
+| `statsd`   | Métricas vía StatsD.                                                    |
+| `sftp`     | Hooks, operadores y sensores SFTP.                                      |
+| `fab`      | Flask AppBuilder Auth Manager para gestión clásica de usuarios y roles. |
+| `pandas`   | Para la manipulación de datos con `dataframes`.                         |
 
 **Validación:**
 
@@ -523,7 +526,7 @@ No instalar dependencias adicionales mezcladas en el mismo comando inicial si no
 Ejemplo:
 
 ```bash
-pip install "apache-airflow==3.2.1" pandas duckdb python-dotenv
+pip install "apache-airflow==3.2.1" duckdb python-dotenv
 pip check
 ```
 
@@ -546,6 +549,9 @@ Si `airflow.cfg` aún no fue generado, ejecutar una inicialización controlada p
 Verificar variables:
 
 ```bash
+export AIRFLOW_HOME=/opt/airflow/airflow_3.2.1
+export AIRFLOW_CONFIG=/opt/airflow/airflow_3.2.1/configs/airflow.cfg
+
 echo "$AIRFLOW_HOME"
 echo "$AIRFLOW_CONFIG"
 ```
@@ -632,14 +638,14 @@ AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS=admin:admin
 AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS=False
 
 # Metadata database PostgreSQL
-AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow3:airflow3_lab_pass@localhost:5432/airflow3_meta
+AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow3:airflow3_lab_pass@$POSTGRES_IPHOST:$POSTGRES_PORT/airflow3_meta
 AIRFLOW__DATABASE__SQL_ALCHEMY_SCHEMA=airflow3_metastore
 AIRFLOW__DATABASE__SQL_ENGINE_ENCODING=utf-8
 AIRFLOW__DATABASE__SQL_ALCHEMY_POOL_PRE_PING=True
 
 # Logging local
 AIRFLOW__LOGGING__BASE_LOG_FOLDER=/opt/airflow/airflow_3.2.1/logs
-AIRFLOW__LOGGING__LOGGING_LEVEL=INFO
+AIRFLOW__LOGGING__LOGGING_LEVEL=WARNING
 AIRFLOW__LOGGING__FAB_LOGGING_LEVEL=WARNING
 AIRFLOW__LOGGING__DAG_PROCESSOR_CHILD_PROCESS_LOG_DIRECTORY=/opt/airflow/airflow_3.2.1/logs/dag_processor
 
@@ -675,8 +681,17 @@ airflow config get-value core auth_manager
 
 ```text
 LocalExecutor
-postgresql+psycopg2://...
+postgresql+psycopg2://airflow3:airflow3_lab_pass@iphost:5432/airflow3_meta
 airflow.api_fastapi.auth.managers.simple.simple_auth_manager.SimpleAuthManager
+```
+
+**Inicializar el archivo `airflow.cfg`** 
+
+Airflow genera automáticamente el archivo airflow.cfg con los valores predeterminados la primera vez que se invoca un 
+comando si detecta que el archivo no existe en la ruta especificada. Puedes usar un comando inofensivo como `airflow version` o `airflow info`
+
+```bash
+airflow config list --defaults > /opt/airflow/airflow_3.2.1/configs/airflow.cfg
 ```
 
 ---
@@ -733,7 +748,7 @@ En Airflow moderno se debe usar `airflow db migrate`. Los comandos antiguos como
 
 ```bash
 airflow db check
-psql "postgresql://airflow3:airflow3_lab_pass@localhost:5432/airflow3_meta" \
+psql "postgresql://airflow3:airflow3_lab_pass@$POSTGRES_IPHOST:$POSTGRES_PORT/airflow3_meta" \
   -c "SELECT schemaname, tablename FROM pg_tables WHERE schemaname = 'airflow3_metastore' ORDER BY tablename LIMIT 10;"
 ```
 
@@ -781,7 +796,7 @@ La contraseña será generada o administrada por el Simple Auth Manager según l
 
 ---
 
-### Paso 15 — Ejecutar prueba rápida con standalone
+### Paso 15 — Ejecutar prueba rápida con standalone (Opcional)
 
 **Objetivo del paso:** validar que Airflow puede iniciar en modo local todo-en-uno.
 
@@ -804,7 +819,7 @@ Detener con `CTRL + C` una vez validado.
 
 ---
 
-### Paso 16 — Ejecutar componentes principales por separado
+### Paso 16 — Ejecutar componentes principales por separado (Recomendado)
 
 **Objetivo del paso:** ejecutar Airflow 3.2.1 de forma más cercana a un despliegue controlado.
 
