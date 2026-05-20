@@ -198,8 +198,23 @@ uname -a
 pyenv versions
 python --version
 
+# Servicio PostgreSQL ejecudandose en WSL/Ubuntu
 psql --version
 sudo systemctl status postgresql --no-pager
+
+# Servicio PostgreSQL ejecudandose en Windows
+
+# Obtener la IP de Windows desde WSL
+ip route show | grep -i default | awk '{ print $3 }'
+
+# Variables de conexión
+PGHOST="172.24.16.1"
+PGPORT="5432"
+PGUSER="postgres"
+PGDATABASE="postgres"
+
+# Ejecutar psql y mostrar la versión
+psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -c "SELECT version();"
 ```
 
 ### Dependencias básicas del sistema
@@ -254,7 +269,7 @@ Estructura de referencia:
 └── airflow_3.2.1/
     ├── venv/
     ├── configs/
-    │   ├── airflow.cfg
+    │   ├── airflow_lab.cfg
     │   ├── airflow3_lab.env
     │   └── simple_auth_manager_passwords.json.generated
     ├── dags/
@@ -280,17 +295,17 @@ Estructura de referencia:
 
 Variables utilizadas en los ejemplos:
 
-| Variable | Valor de referencia |
-|---|---|
-| `AIRFLOW_VERSION` | `3.2.1` |
-| `PYTHON_VERSION` | `3.12` |
-| `AIRFLOW_BASE` | `/opt/airflow` |
-| `AIRFLOW_HOME` | `/opt/airflow/airflow_3.2.1` |
-| `AIRFLOW_CONFIG` | `/opt/airflow/airflow_3.2.1/configs/airflow.cfg` |
-| `AIRFLOW_PORT` | `8080` |
-| `POSTGRES_DB` | `airflow3_meta` |
-| `POSTGRES_USER` | `airflow3` |
-| `POSTGRES_SCHEMA` | `airflow3_metastore` |
+| Variable          | Valor de referencia                                  |
+| ----------------- | ---------------------------------------------------- |
+| `AIRFLOW_VERSION` | `3.2.1`                                              |
+| `PYTHON_VERSION`  | `3.12`                                               |
+| `AIRFLOW_BASE`    | `/opt/airflow`                                       |
+| `AIRFLOW_HOME`    | `/opt/airflow/airflow_3.2.1`                         |
+| `AIRFLOW_CONFIG`  | `/opt/airflow/airflow_3.2.1/configs/airflow_lab.cfg` |
+| `AIRFLOW_PORT`    | `8080`                                               |
+| `POSTGRES_DB`     | `airflow3_meta`                                      |
+| `POSTGRES_USER`   | `airflow3`                                           |
+| `POSTGRES_SCHEMA` | `airflow3_metastore`                                 |
 
 ---
 
@@ -373,18 +388,18 @@ which pip
 **Objetivo del paso:** facilitar la activación repetible del entorno de Airflow.
 
 **Archivo:**  
-`/opt/airflow/airflow_3.2.1/scripts/activate_airflow_3.2.1.sh`
+`/opt/airflow/airflow_3.2.1/scripts/activate_airflow_lab_3.2.1.sh`
 
 **Instrucciones:**
 
 ```bash
-cat > /opt/airflow/airflow_3.2.1/scripts/activate_airflow_3.2.1.sh <<'EOF_SCRIPT'
+cat > /opt/airflow/airflow_3.2.1/scripts/activate_airflow_lab_3.2.1.sh <<'EOF_SCRIPT'
 #!/bin/bash
 
 source /opt/airflow/airflow_3.2.1/venv/bin/activate
 
 export AIRFLOW_HOME=/opt/airflow/airflow_3.2.1
-export AIRFLOW_CONFIG=/opt/airflow/airflow_3.2.1/configs/airflow.cfg
+export AIRFLOW_CONFIG=/opt/airflow/airflow_3.2.1/configs/airflow_lab.cfg
 export AIRFLOW_VERSION=3.2.1
 export PYTHON_VERSION=3.12
 export POSTGRES_IPHOST=172.24.16.1
@@ -392,18 +407,24 @@ export POSTGRES_PORT=5432
 
 cd /opt/airflow/airflow_3.2.1
 
-echo "Entorno de Apache Airflow ${AIRFLOW_VERSION} activado."
+echo "Instancia de Apache Airflow ${AIRFLOW_VERSION} activado."
+echo "Entorno: Laboratorio"
+echo "Repositorio: cit-bigdata-lab/main"
 echo "AIRFLOW_HOME=${AIRFLOW_HOME}"
 echo "AIRFLOW_CONFIG=${AIRFLOW_CONFIG}"
 EOF_SCRIPT
+```
 
-chmod +x /opt/airflow/airflow_3.2.1/scripts/activate_airflow_3.2.1.sh
+Luego:
+
+```bash
+chmod +x /opt/airflow/airflow_3.2.1/scripts/activate_airflow_lab_3.2.1.sh
 ```
 
 Activar:
 
 ```bash
-source /opt/airflow/airflow_3.2.1/scripts/activate_airflow_3.2.1.sh
+source /opt/airflow/airflow_3.2.1/scripts/activate_airflow_lab_3.2.1.sh
 ```
 
 **Resultado esperado:**  
@@ -421,11 +442,20 @@ El prompt debe quedar dentro del entorno virtual y las variables `AIRFLOW_HOME` 
 cat >> ~/.bashrc <<'EOF_ALIAS'
 
 # Apache Airflow 3.2.1 - laboratorio CIT Big Data
-alias airflow3='source /opt/airflow/airflow_3.2.1/scripts/activate_airflow_3.2.1.sh'
+alias airflow3-lab='source /opt/airflow/airflow_3.2.1/scripts/activate_airflow_lab_3.2.1.sh'
 EOF_ALIAS
+```
 
+Luego:
+
+```bash
 source ~/.bashrc
-airflow3
+```
+
+Verificar:
+
+```bash
+airflow3-lab
 ```
 
 **Resultado esperado:**  
@@ -495,15 +525,15 @@ pip install \
 
 **Extras usados:**
 
-| Extra      | Uso                                                                     |
-|------------|-------------------------------------------------------------------------|
-| `async`    | Workers asíncronos para Gunicorn/API Server.                            |
-| `standard` | Operadores y hooks estándar.                                            |
-| `postgres` | Integración con PostgreSQL.                                             |
-| `statsd`   | Métricas vía StatsD.                                                    |
-| `sftp`     | Hooks, operadores y sensores SFTP.                                      |
-| `fab`      | Flask AppBuilder Auth Manager para gestión clásica de usuarios y roles. |
-| `pandas`   | Para la manipulación de datos con `dataframes`.                         |
+| Extra      | Uso                                                                                 |
+| ---------- | ----------------------------------------------------------------------------------- |
+| `async`    | Workers asíncronos para Gunicorn/API Server.                                        |
+| `standard` | Operadores y hooks estándar.                                                        |
+| `postgres` | Integración con PostgreSQL.                                                         |
+| `statsd`   | Métricas vía StatsD.                                                                |
+| `sftp`     | Hooks, operadores y sensores SFTP.                                                  |
+| `fab`      | Flask AppBuilder Auth Manager para gestión clásica de usuarios y roles.             |
+| `pandas`   | Para manipular, limpiar y analizar datos estructurados de forma rápida y eficiente. |
 
 **Validación:**
 
@@ -516,6 +546,7 @@ pip check
 **Resultado esperado:**
 
 ```text
+/opt/airflow/airflow_3.2.1/venv/bin/airflow
 3.2.1
 No broken requirements found.
 ```
@@ -527,70 +558,59 @@ Ejemplo:
 
 ```bash
 pip install "apache-airflow==3.2.1" duckdb python-dotenv
-pip check
 ```
 
 ---
 
 ### Paso 9 — Generar configuración inicial de Airflow
 
-**Objetivo del paso:** crear `airflow.cfg` en la ruta institucional definida.
+**Objetivo del paso:** crear `airflow_lab.cfg` en la ruta de entorno definida (`AIRFLOW_CONFIG`).
 
 **Instrucciones:**
 
 ```bash
-airflow config list > /tmp/airflow_config_check.txt
+airflow config list --defaults > /opt/airflow/airflow_3.2.1/configs/airflow_lab.cfg
 
 airflow db check || true
 ```
 
-Si `airflow.cfg` aún no fue generado, ejecutar una inicialización controlada posterior con `airflow db migrate` luego de configurar PostgreSQL. Airflow también puede generar configuración cuando se ejecutan comandos que inicializan el entorno.
+**Inicializar el archivo `airflow_lab.cfg`:**
 
-Verificar variables:
+- Airflow genera automáticamente el archivo `airflow.cfg` con los valores predeterminados la primera vez que se invoca un 
+comando si detecta que el archivo no existe en la ruta especificada. Puedes usar un comando inofensivo como `airflow version` o `airflow info`
 
-```bash
-export AIRFLOW_HOME=/opt/airflow/airflow_3.2.1
-export AIRFLOW_CONFIG=/opt/airflow/airflow_3.2.1/configs/airflow.cfg
+**Consideraciones para Airflow 3.1.8:**
 
-echo "$AIRFLOW_HOME"
-echo "$AIRFLOW_CONFIG"
-```
-
-**Resultado esperado:**
-
-```text
-/opt/airflow/airflow_3.2.1
-/opt/airflow/airflow_3.2.1/configs/airflow.cfg
-```
+* **Aislamiento:** Al usar una ruta personalizada fuera del `$AIRFLOW_HOME` estándar, asegúrese de que sus sesiones de terminal siempre tengan cargada la variable `AIRFLOW_CONFIG` para que Airflow reconozca sus ajustes.
+* **Actualización de parámetros (2.x --> 3.x):** Una vez creado el archivo `airflow.cfg`, se recomienda ejecutar el comando `airflow config update --fix`. Este comando ajustará automáticamente el contenido de su nuevo `airflow.cfg` para que sea plenamente compatible con la arquitectura de la versión 3.0+, como el cambio de nomenclatura de `webserver` a `api_server`. Este comando está diseñado para facilitar la migración de tu archivo de configuración (`airflow.cfg`) de la versión 2.x a la 3.0+.
 
 ---
 
 ### Paso 10 — Crear base de datos y usuario PostgreSQL
 
-**Objetivo del paso:** preparar PostgreSQL como base de datos de metadatos de Airflow.
+**Objetivo del paso:** configurar PostgreSQL como base de datos de metadatos para Airflow. Cada estudiante puede decidir si utilizar una instancia de PostgreSQL 15 en su entorno de WSL o directamente en Windows. En este tutorial, el profesor eligió desplegar PostgreSQL en el entorno de Windows.
 
-**Instrucciones:**
-
-```bash
-sudo -u postgres psql
-```
-
-Dentro de `psql`:
+Ejecutar las siguientes instrucciones:
 
 ```sql
+# Paso 1. Crear usuario y credencial para la base de datos metadata de airflow
 CREATE USER airflow3 WITH PASSWORD 'airflow3_lab_pass';
+
+# Paso 2. Crear la base de datos para guardar el metada de airflow3
 CREATE DATABASE airflow3_meta OWNER airflow3;
-\c airflow3_meta
-CREATE SCHEMA IF NOT EXISTS airflow3_metastore AUTHORIZATION airflow3;
-GRANT ALL PRIVILEGES ON SCHEMA airflow3_metastore TO airflow3;
-ALTER ROLE airflow3 SET search_path = airflow3_metastore, public;
-\q
+
+# Paso 3. Crear el esquema para la instancia de airflow3-lab
+CREATE SCHEMA IF NOT EXISTS airflow3_lab_metastore AUTHORIZATION airflow3;
+
+# Paso 4. Privilegios para crear las tablas de airflow3 en el esquema airflow3_lab
+GRANT ALL PRIVILEGES ON SCHEMA airflow3_lab_metastore TO airflow3;
+ALTER ROLE airflow3 SET search_path = airflow3_lab_metastore, public;
 ```
 
 **Validación:**
 
 ```bash
-psql "postgresql://airflow3:airflow3_lab_pass@localhost:5432/airflow3_meta" \
+psql "postgresql://airflow3:airflow3_lab_pass@172.24.16.1:5432/airflow3_meta" \
   -c "SELECT current_database(), current_user, current_schema();"
 ```
 
@@ -618,14 +638,14 @@ cat > /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env <<'EOF_ENV'
 # ==========================================================
 
 AIRFLOW_HOME=/opt/airflow/airflow_3.2.1
-AIRFLOW_CONFIG=/opt/airflow/airflow_3.2.1/configs/airflow.cfg
+AIRFLOW_CONFIG=/opt/airflow/airflow_3.2.1/configs/airflow_lab.cfg
 
 # Core
 AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/airflow_3.2.1/dags
 AIRFLOW__CORE__PLUGINS_FOLDER=/opt/airflow/airflow_3.2.1/plugins
 AIRFLOW__CORE__DEFAULT_TIMEZONE=America/Asuncion
 AIRFLOW__CORE__EXECUTOR=LocalExecutor
-AIRFLOW__CORE__LOAD_EXAMPLES=False
+AIRFLOW__CORE__LOAD_EXAMPLES=False # True para cargar y mirar lois DAGs de ejemplos
 AIRFLOW__CORE__PARALLELISM=16
 AIRFLOW__CORE__MAX_ACTIVE_TASKS_PER_DAG=8
 AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG=4
@@ -638,8 +658,8 @@ AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS=admin:admin
 AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS=False
 
 # Metadata database PostgreSQL
-AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow3:airflow3_lab_pass@$POSTGRES_IPHOST:$POSTGRES_PORT/airflow3_meta
-AIRFLOW__DATABASE__SQL_ALCHEMY_SCHEMA=airflow3_metastore
+AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow3:airflow3_lab_pass@172.24.16.1:5432/airflow3_meta
+AIRFLOW__DATABASE__SQL_ALCHEMY_SCHEMA=airflow3_lab_metastore
 AIRFLOW__DATABASE__SQL_ENGINE_ENCODING=utf-8
 AIRFLOW__DATABASE__SQL_ALCHEMY_POOL_PRE_PING=True
 
@@ -657,7 +677,11 @@ AIRFLOW__API__HOST=0.0.0.0
 AIRFLOW__API__PORT=8080
 
 EOF_ENV
+```
 
+Luego:
+
+```bash
 chmod 600 /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
 ```
 
@@ -681,22 +705,13 @@ airflow config get-value core auth_manager
 
 ```text
 LocalExecutor
-postgresql+psycopg2://airflow3:airflow3_lab_pass@iphost:5432/airflow3_meta
+postgresql+psycopg2://airflow3:airflow3_lab_pass@172.24.16.1:5432/airflow3_meta
 airflow.api_fastapi.auth.managers.simple.simple_auth_manager.SimpleAuthManager
-```
-
-**Inicializar el archivo `airflow.cfg`** 
-
-Airflow genera automáticamente el archivo airflow.cfg con los valores predeterminados la primera vez que se invoca un 
-comando si detecta que el archivo no existe en la ruta especificada. Puedes usar un comando inofensivo como `airflow version` o `airflow info`
-
-```bash
-airflow config list --defaults > /opt/airflow/airflow_3.2.1/configs/airflow.cfg
 ```
 
 ---
 
-### Paso 12 — Alternativa de autenticación con FAB Auth Manager
+### Paso 12 — Alternativa de autenticación con FAB Auth Manager (Opcional)
 
 **Objetivo del paso:** documentar la alternativa clásica de usuarios, roles y permisos mediante Flask AppBuilder.
 
@@ -729,15 +744,21 @@ No cambiar de `SimpleAuthManager` a `FabAuthManager` en un entorno con usuarios 
 
 ### Paso 13 — Inicializar o migrar la base de metadatos
 
+**Pre-requisito:**
+
+```bash
+# Cargar las variables de la instancia de airflow3-lab
+source /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+
+# Verificar conexión a la base de datos configurado en AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
+airflow db check
+```
+
 **Objetivo del paso:** crear las tablas internas de Airflow en PostgreSQL.
 
 **Instrucciones:**
 
 ```bash
-set -a
-source /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
-set +a
-
 airflow db migrate
 ```
 
@@ -747,9 +768,8 @@ En Airflow moderno se debe usar `airflow db migrate`. Los comandos antiguos como
 **Validación:**
 
 ```bash
-airflow db check
 psql "postgresql://airflow3:airflow3_lab_pass@$POSTGRES_IPHOST:$POSTGRES_PORT/airflow3_meta" \
-  -c "SELECT schemaname, tablename FROM pg_tables WHERE schemaname = 'airflow3_metastore' ORDER BY tablename LIMIT 10;"
+  -c "SELECT schemaname, tablename FROM pg_tables WHERE schemaname = 'airflow3_lab_metastore' ORDER BY tablename LIMIT 10;"
 ```
 
 **Resultado esperado:**  
@@ -757,7 +777,7 @@ Deben existir tablas internas de Airflow dentro del esquema `airflow3_metastore`
 
 ---
 
-### Paso 14 — Crear usuario administrador si se usa FAB
+### Paso 14 — Crear usuario administrador si se usa FAB (Opcional. Si se optó por el Paso 12)
 
 **Objetivo del paso:** crear un usuario administrador para la interfaz web cuando se usa `FabAuthManager`.
 
@@ -821,7 +841,10 @@ Detener con `CTRL + C` una vez validado.
 
 ### Paso 16 — Ejecutar componentes principales por separado (Recomendado)
 
+
 **Objetivo del paso:** ejecutar Airflow 3.2.1 de forma más cercana a un despliegue controlado.
+
+**Pre-requisitos:**
 
 Abrir cuatro terminales distintas. En cada una ejecutar:
 
@@ -835,25 +858,25 @@ set +a
 #### Terminal 1 — API Server
 
 ```bash
-airflow api-server --host 0.0.0.0 --port 8080
+airflow api-server -D --host 0.0.0.0 --port 8080
 ```
 
 #### Terminal 2 — Scheduler
 
 ```bash
-airflow scheduler
+airflow scheduler -D
 ```
 
 #### Terminal 3 — DAG Processor
 
 ```bash
-airflow dag-processor
+airflow dag-processor -D
 ```
 
 #### Terminal 4 — Triggerer
 
 ```bash
-airflow triggerer
+airflow triggerer -D
 ```
 
 **Resultado esperado:**  

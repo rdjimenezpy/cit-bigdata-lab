@@ -545,7 +545,7 @@ man comando
 wsl hostname -I
 ```
 
-## 8.7.2 Obtener la IP de Windows vista desde WSL
+## 8.7.2 Obtener la IP de Windows desde WSL
 
 ```bash
 ip route show | grep -i default | awk '{ print $3 }'
