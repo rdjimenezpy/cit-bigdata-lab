@@ -482,11 +482,6 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Seleccionar-var</from>
-      <to>Ordenar og</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Ordenar og</from>
       <to>Stream lookup</to>
       <enabled>Y</enabled>
@@ -494,11 +489,6 @@
     <hop>
       <from>Stream lookup</from>
       <to>Crear-nuevas-variables</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Crear-nuevas-variables</from>
-      <to>Select values</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -514,6 +504,46 @@
     <hop>
       <from>Tratar-valores-nulos</from>
       <to>Stream lookup</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Extraer_clasificador_oee</from>
+      <to>Select values 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Seleccionar-var</from>
+      <to>String operations</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select values 2</from>
+      <to>String operations 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>String operations</from>
+      <to>Ordenar og</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>String operations 2</from>
+      <to>Sort rows</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Sort rows</from>
+      <to>Stream lookup 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Crear-nuevas-variables</from>
+      <to>Stream lookup 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Stream lookup 2</from>
+      <to>Select values</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -535,7 +565,7 @@
     <truncate>Y</truncate>
     <ignore_errors>N</ignore_errors>
     <use_batch>Y</use_batch>
-    <specify_fields>N</specify_fields>
+    <specify_fields>Y</specify_fields>
     <partitioning_enabled>N</partitioning_enabled>
     <partitioning_field/>
     <partitioning_daily>N</partitioning_daily>
@@ -555,16 +585,32 @@
         <stream_name>mes</stream_name>
       </field>
       <field>
-        <column_name>nivel_codigo</column_name>
-        <stream_name>nivel_codigo</stream_name>
+        <column_name>unidad_nivel_codigo</column_name>
+        <stream_name>unidad_nivel_codigo</stream_name>
       </field>
       <field>
-        <column_name>entidad_codigo</column_name>
-        <stream_name>entidad_codigo</stream_name>
+        <column_name>unidad_entidad_codigo</column_name>
+        <stream_name>unidad_entidad_codigo</stream_name>
       </field>
       <field>
-        <column_name>oee_codigo</column_name>
-        <stream_name>oee_codigo</stream_name>
+        <column_name>unidad_academica_codigo</column_name>
+        <stream_name>unidad_academica_codigo</stream_name>
+      </field>
+      <field>
+        <column_name>unidad_nivel_descripcion</column_name>
+        <stream_name>unidad_nivel_descripcion</stream_name>
+      </field>
+      <field>
+        <column_name>unidad_entidad_descripcion</column_name>
+        <stream_name>unidad_entidad_descripcion</stream_name>
+      </field>
+      <field>
+        <column_name>unidad_academica_descripcion</column_name>
+        <stream_name>unidad_academica_descripcion</stream_name>
+      </field>
+      <field>
+        <column_name>unidad_academica_sigla</column_name>
+        <stream_name>unidad_academica_sigla</stream_name>
       </field>
       <field>
         <column_name>tipo_documento</column_name>
@@ -664,8 +710,199 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1296</xloc>
-      <yloc>480</yloc>
+      <xloc>1312</xloc>
+      <yloc>688</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Crear-nuevas-variables</name>
+    <type>ScriptValueMod</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>
+// VARIABLE TIPO-DOCUMENTO
+var tipo_documento = "SIN_DATO";
+
+if (documento != null &amp;&amp; documento.length > 0) {
+   var primerChar = documento.charAt(0);
+
+   if (primerChar >= "1" &amp;&amp; primerChar &lt;= "9") {
+      tipo_documento = "CEDULA DE IDENTIDAD";
+   } else if (primerChar == "E") {
+      tipo_documento = "EXTRANJERO";
+   } else if (primerChar == "V") {
+      tipo_documento = "PUESTO_VACANTE";
+   } else if (primerChar == "A") {
+      tipo_documento = "ANONIMATO";
+   }
+}
+
+tipo_documento;
+
+
+// VARIABLE FUENTE-FINANCIAMIENTO-DESCRIPCION
+var fuente_financiamiento_descripcion = "SIN_DATO";
+var codigo_string = fuente_financiamiento_codigo.toString(); 
+
+switch (codigo_string) {
+   case '10':
+      fuente_financiamiento_descripcion = "TESORO_PUBLICO";
+      break;
+   case '20':
+      fuente_financiamiento_descripcion = "PRESTAMOS";
+      break;
+   case '30':
+      fuente_financiamiento_descripcion = "RECURSOS_INTITUCIONALES";
+      break;
+   default:
+      fuente_financiamiento_descripcion = "SIN_DATO";
+}
+
+// VARIABLE FECHA DE NACIOMIENTO
+// Fecha bandera
+var fecha_bandera = new Date("1900-01-01");
+
+// Validación de fecha_nacimiento
+var fecha_valida;
+if (fecha_nacimiento == null || fecha_nacimiento == "") {
+   fecha_valida = fecha_bandera;
+} else {
+   try {
+      var f = new Date(fecha_nacimiento);
+      if (isNaN(f.getTime())) {
+         fecha_valida = fecha_bandera;
+      } else {
+         fecha_valida = f;
+      }
+   } catch (e) {
+      fecha_valida = fecha_bandera;
+   }
+}
+
+// Calcular edad
+var hoy = new Date();
+var edad = hoy.getFullYear() - fecha_valida.getFullYear();
+var m = hoy.getMonth() - fecha_valida.getMonth();
+if (m &lt; 0 || (m === 0 &amp;&amp; hoy.getDate() &lt; fecha_valida.getDate())) {
+   edad--;
+}
+
+// Grupo etario
+var grupo_etario = "SIN_DATO";
+if (edad >= 0 &amp;&amp; edad &lt;= 17) {
+   grupo_etario = "MENOR DE EDAD";
+} else if (edad >= 18 &amp;&amp; edad &lt;= 29) {
+   grupo_etario = "JOVEN";
+} else if (edad >= 30 &amp;&amp; edad &lt;= 44) {
+   grupo_etario = "ADULTO";
+} else if (edad >= 45 &amp;&amp; edad &lt;= 64) {
+   grupo_etario = "ADULTO MAYOR";
+} else if (edad >= 65) {
+   grupo_etario = "TERCERA EDAD";
+}
+
+
+// Clasificación por generación
+var generacion = "SIN_DATO";
+var anio = fecha_valida.getFullYear();
+
+if (anio >= 1997 &amp;&amp; anio &lt;= 2012) {
+   generacion = "Generación Z";
+} else if (anio >= 1981 &amp;&amp; anio &lt;= 1996) {
+   generacion = "Generación Y (Millennials)";
+} else if (anio >= 1965 &amp;&amp; anio &lt;= 1980) {
+   generacion = "Generación X";
+} else if (anio >= 1946 &amp;&amp; anio &lt;= 1964) {
+   generacion = "Baby Boomers";
+} else if (anio &lt; 1946) {
+   generacion = "Generación Silenciosa";
+} else if (anio >= 2013) {
+   generacion = "Generación Alfa";
+}
+
+
+// Variables de salida
+fecha_valida;
+edad;
+grupo_etario;
+generacion;
+</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>tipo_documento</name>
+        <rename>tipo_documento</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>fuente_financiamiento_descripcion</name>
+        <rename>fuente_financiamiento_descripcion</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>fecha_nacimiento</name>
+        <rename>fecha_valida</rename>
+        <type>Date</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>edad</name>
+        <rename>edad</rename>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>grupo_etario</name>
+        <rename>grupo_etario</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>generacion</name>
+        <rename>generacion</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1152</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1230,7 +1467,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>656</xloc>
+      <xloc>592</xloc>
       <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1339,7 +1576,7 @@
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>nivel_codigo</leftvalue>
+        <leftvalue>unidad_nivel_codigo</leftvalue>
         <function>=</function>
         <rightvalue/>
         <value>
@@ -1364,197 +1601,6 @@
     <GUI>
       <xloc>384</xloc>
       <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Crear-nuevas-variables</name>
-    <type>ScriptValueMod</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <compatible>N</compatible>
-    <optimizationLevel>9</optimizationLevel>
-    <jsScripts>
-      <jsScript>
-        <jsScript_type>0</jsScript_type>
-        <jsScript_name>Script 1</jsScript_name>
-        <jsScript_script>
-// VARIABLE TIPO-DOCUMENTO
-var tipo_documento = "SIN_DATO";
-
-if (documento != null &amp;&amp; documento.length > 0) {
-   var primerChar = documento.charAt(0);
-
-   if (primerChar >= "1" &amp;&amp; primerChar &lt;= "9") {
-      tipo_documento = "CEDULA DE IDENTIDAD";
-   } else if (primerChar == "E") {
-      tipo_documento = "EXTRANJERO";
-   } else if (primerChar == "V") {
-      tipo_documento = "PUESTO_VACANTE";
-   } else if (primerChar == "A") {
-      tipo_documento = "ANONIMATO";
-   }
-}
-
-tipo_documento;
-
-
-// VARIABLE FUENTE-FINANCIAMIENTO-DESCRIPCION
-var fuente_financiamiento_descripcion = "SIN_DATO";
-var codigo_string = fuente_financiamiento_codigo.toString(); 
-
-switch (codigo_string) {
-   case '10':
-      fuente_financiamiento_descripcion = "TESORO_PUBLICO";
-      break;
-   case '20':
-      fuente_financiamiento_descripcion = "PRESTAMOS";
-      break;
-   case '30':
-      fuente_financiamiento_descripcion = "RECURSOS_INTITUCIONALES";
-      break;
-   default:
-      fuente_financiamiento_descripcion = "SIN_DATO";
-}
-
-// VARIABLE FECHA DE NACIOMIENTO
-// Fecha bandera
-var fecha_bandera = new Date("1900-01-01");
-
-// Validación de fecha_nacimiento
-var fecha_valida;
-if (fecha_nacimiento == null || fecha_nacimiento == "") {
-   fecha_valida = fecha_bandera;
-} else {
-   try {
-      var f = new Date(fecha_nacimiento);
-      if (isNaN(f.getTime())) {
-         fecha_valida = fecha_bandera;
-      } else {
-         fecha_valida = f;
-      }
-   } catch (e) {
-      fecha_valida = fecha_bandera;
-   }
-}
-
-// Calcular edad
-var hoy = new Date();
-var edad = hoy.getFullYear() - fecha_valida.getFullYear();
-var m = hoy.getMonth() - fecha_valida.getMonth();
-if (m &lt; 0 || (m === 0 &amp;&amp; hoy.getDate() &lt; fecha_valida.getDate())) {
-   edad--;
-}
-
-// Grupo etario
-var grupo_etario = "SIN_DATO";
-if (edad >= 0 &amp;&amp; edad &lt;= 17) {
-   grupo_etario = "MENOR DE EDAD";
-} else if (edad >= 18 &amp;&amp; edad &lt;= 29) {
-   grupo_etario = "JOVEN";
-} else if (edad >= 30 &amp;&amp; edad &lt;= 44) {
-   grupo_etario = "ADULTO";
-} else if (edad >= 45 &amp;&amp; edad &lt;= 64) {
-   grupo_etario = "ADULTO MAYOR";
-} else if (edad >= 65) {
-   grupo_etario = "TERCERA EDAD";
-}
-
-
-// Clasificación por generación
-var generacion = "SIN_DATO";
-var anio = fecha_valida.getFullYear();
-
-if (anio >= 1997 &amp;&amp; anio &lt;= 2012) {
-   generacion = "Generación Z";
-} else if (anio >= 1981 &amp;&amp; anio &lt;= 1996) {
-   generacion = "Generación Y (Millennials)";
-} else if (anio >= 1965 &amp;&amp; anio &lt;= 1980) {
-   generacion = "Generación X";
-} else if (anio >= 1946 &amp;&amp; anio &lt;= 1964) {
-   generacion = "Baby Boomers";
-} else if (anio &lt; 1946) {
-   generacion = "Generación Silenciosa";
-} else if (anio >= 2013) {
-   generacion = "Generación Alfa";
-}
-
-
-// Variables de salida
-fecha_valida;
-edad;
-grupo_etario;
-generacion;
-</jsScript_script>
-      </jsScript>
-    </jsScripts>
-    <fields>
-      <field>
-        <name>tipo_documento</name>
-        <rename>tipo_documento</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>fuente_financiamiento_descripcion</name>
-        <rename>fuente_financiamiento_descripcion</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>fecha_nacimiento</name>
-        <rename>fecha_valida</rename>
-        <type>Date</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>edad</name>
-        <rename>edad</rename>
-        <type>Integer</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>grupo_etario</name>
-        <rename>grupo_etario</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>generacion</name>
-        <rename>generacion</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1152</xloc>
-      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1781,39 +1827,30 @@ generacion;
     <fields>
       <field>
         <name>grupo_codigo</name>
-        <rename/>
       </field>
       <field>
         <name>grupo_descripcion</name>
-        <rename/>
       </field>
       <field>
         <name>subgrupo_codigo</name>
-        <rename/>
       </field>
       <field>
         <name>subgrupo_descripcion</name>
-        <rename/>
       </field>
       <field>
         <name>objeto_gasto_codigo</name>
-        <rename/>
       </field>
       <field>
         <name>objeto_gasto_descripcion</name>
-        <rename/>
       </field>
       <field>
         <name>control_financiero_codigo</name>
-        <rename/>
       </field>
       <field>
         <name>control_financiero_descripcion</name>
-        <rename/>
       </field>
       <field>
         <name>clasificacion_gasto_descripcion</name>
-        <rename/>
       </field>
       <select_unspecified>N</select_unspecified>
       <remove>
@@ -1937,7 +1974,7 @@ generacion;
       </output>
     </remotesteps>
     <GUI>
-      <xloc>832</xloc>
+      <xloc>736</xloc>
       <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
@@ -2067,7 +2104,7 @@ generacion;
       </meta>
       <meta>
         <name>nivel</name>
-        <rename>nivel_codigo</rename>
+        <rename>unidad_nivel_codigo</rename>
         <type>Integer</type>
         <length>-2</length>
         <precision>-2</precision>
@@ -2084,7 +2121,7 @@ generacion;
       </meta>
       <meta>
         <name>entidad</name>
-        <rename>entidad_codigo</rename>
+        <rename>unidad_entidad_codigo</rename>
         <type>Integer</type>
         <length>-2</length>
         <precision>-2</precision>
@@ -2101,7 +2138,7 @@ generacion;
       </meta>
       <meta>
         <name>oee</name>
-        <rename>oee_codigo</rename>
+        <rename>unidad_academica_codigo</rename>
         <type>Integer</type>
         <length>-2</length>
         <precision>-2</precision>
@@ -2390,15 +2427,31 @@ generacion;
         <rename/>
       </field>
       <field>
-        <name>nivel_codigo</name>
+        <name>unidad_nivel_codigo</name>
         <rename/>
       </field>
       <field>
-        <name>entidad_codigo</name>
+        <name>unidad_entidad_codigo</name>
         <rename/>
       </field>
       <field>
-        <name>oee_codigo</name>
+        <name>unidad_academica_codigo</name>
+        <rename/>
+      </field>
+      <field>
+        <name>unidad_nivel_descripcion</name>
+        <rename/>
+      </field>
+      <field>
+        <name>unidad_entidad_descripcion</name>
+        <rename/>
+      </field>
+      <field>
+        <name>unidad_academica_descripcion</name>
+        <rename/>
+      </field>
+      <field>
+        <name>unidad_academica_sigla</name>
         <rename/>
       </field>
       <field>
@@ -2500,8 +2553,8 @@ generacion;
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1296</xloc>
-      <yloc>352</yloc>
+      <xloc>1312</xloc>
+      <yloc>560</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2596,6 +2649,614 @@ generacion;
     <GUI>
       <xloc>976</xloc>
       <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Extraer_clasificador_oee</name>
+    <type>CsvInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <filename>D:\Storage\Opendata\RAW\clasificador_oee.csv</filename>
+    <filename_field/>
+    <rownum_field/>
+    <include_filename>N</include_filename>
+    <separator>,</separator>
+    <enclosure>"</enclosure>
+    <header>Y</header>
+    <buffer_size>50000</buffer_size>
+    <lazy_conversion>Y</lazy_conversion>
+    <add_filename_result>N</add_filename_result>
+    <parallel>N</parallel>
+    <newline_possible>N</newline_possible>
+    <format>mixed</format>
+    <encoding>windows-1250</encoding>
+    <fields>
+      <field>
+        <name>codigo_nivel</name>
+        <type>String</type>
+        <format>#</format>
+        <currency>G</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>descripcion_nivel</name>
+        <type>String</type>
+        <format/>
+        <currency>G</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>35</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>codigo_entidad</name>
+        <type>String</type>
+        <format>#</format>
+        <currency>G</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>descripcion_entidad</name>
+        <type>String</type>
+        <format/>
+        <currency>G</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>58</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>codigo_oee</name>
+        <type>String</type>
+        <format>#</format>
+        <currency>G</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>descripcion_oee</name>
+        <type>String</type>
+        <format/>
+        <currency>G</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>111</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>descripcion_corta</name>
+        <type>String</type>
+        <format/>
+        <currency>G</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>9</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>direccion</name>
+        <type>String</type>
+        <format/>
+        <currency>G</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>110</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>telefono</name>
+        <type>String</type>
+        <format/>
+        <currency>G</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>33</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>pagina_web</name>
+        <type>String</type>
+        <format/>
+        <currency>G</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>42</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>uri</name>
+        <type>String</type>
+        <format/>
+        <currency>G</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>38</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>608</xloc>
+      <yloc>624</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Select values 2</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>codigo_nivel</name>
+        <rename/>
+      </field>
+      <field>
+        <name>descripcion_nivel</name>
+        <rename/>
+      </field>
+      <field>
+        <name>codigo_entidad</name>
+        <rename/>
+      </field>
+      <field>
+        <name>descripcion_entidad</name>
+        <rename/>
+      </field>
+      <field>
+        <name>codigo_oee</name>
+        <rename/>
+      </field>
+      <field>
+        <name>descripcion_oee</name>
+        <rename/>
+      </field>
+      <field>
+        <name>descripcion_corta</name>
+        <rename/>
+      </field>
+      <select_unspecified>N</select_unspecified>
+      <meta>
+        <name>codigo_nivel</name>
+        <rename>unidad_nivel_codigo</rename>
+        <type>Integer</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>descripcion_nivel</name>
+        <rename>unidad_nivel_descripcion</rename>
+        <type>String</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>codigo_entidad</name>
+        <rename>unidad_entidad_codigo</rename>
+        <type>Integer</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>descripcion_entidad</name>
+        <rename>unidad_entidad_descripcion</rename>
+        <type>String</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>codigo_oee</name>
+        <rename>unidad_academica_codigo</rename>
+        <type>Integer</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>descripcion_oee</name>
+        <rename>unidad_academica_descripcion</rename>
+        <type>String</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>descripcion_corta</name>
+        <rename>unidad_academica_sigla</rename>
+        <type>String</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>752</xloc>
+      <yloc>624</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>String operations</name>
+    <type>StringOperations</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <in_stream_name>grupo_descripcion</in_stream_name>
+        <out_stream_name/>
+        <trim_type>both</trim_type>
+        <lower_upper>upper</lower_upper>
+        <padding_type>none</padding_type>
+        <pad_char/>
+        <pad_len/>
+        <init_cap>N</init_cap>
+        <mask_xml>None</mask_xml>
+        <digits>none</digits>
+        <remove_special_characters>none</remove_special_characters>
+      </field>
+      <field>
+        <in_stream_name>subgrupo_descripcion</in_stream_name>
+        <out_stream_name/>
+        <trim_type>both</trim_type>
+        <lower_upper>upper</lower_upper>
+        <padding_type>none</padding_type>
+        <pad_char/>
+        <pad_len/>
+        <init_cap>N</init_cap>
+        <mask_xml>None</mask_xml>
+        <digits>none</digits>
+        <remove_special_characters>none</remove_special_characters>
+      </field>
+      <field>
+        <in_stream_name>objeto_gasto_descripcion</in_stream_name>
+        <out_stream_name/>
+        <trim_type>both</trim_type>
+        <lower_upper>upper</lower_upper>
+        <padding_type>none</padding_type>
+        <pad_char/>
+        <pad_len/>
+        <init_cap>N</init_cap>
+        <mask_xml>None</mask_xml>
+        <digits>none</digits>
+        <remove_special_characters>none</remove_special_characters>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>880</xloc>
+      <yloc>480</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>String operations 2</name>
+    <type>StringOperations</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <in_stream_name>unidad_nivel_descripcion</in_stream_name>
+        <out_stream_name/>
+        <trim_type>both</trim_type>
+        <lower_upper>upper</lower_upper>
+        <padding_type>none</padding_type>
+        <pad_char/>
+        <pad_len/>
+        <init_cap>N</init_cap>
+        <mask_xml>None</mask_xml>
+        <digits>none</digits>
+        <remove_special_characters>none</remove_special_characters>
+      </field>
+      <field>
+        <in_stream_name>unidad_entidad_descripcion</in_stream_name>
+        <out_stream_name/>
+        <trim_type>both</trim_type>
+        <lower_upper>upper</lower_upper>
+        <padding_type>none</padding_type>
+        <pad_char/>
+        <pad_len/>
+        <init_cap>N</init_cap>
+        <mask_xml>None</mask_xml>
+        <digits>none</digits>
+        <remove_special_characters>none</remove_special_characters>
+      </field>
+      <field>
+        <in_stream_name>unidad_academica_descripcion</in_stream_name>
+        <out_stream_name/>
+        <trim_type>both</trim_type>
+        <lower_upper>upper</lower_upper>
+        <padding_type>none</padding_type>
+        <pad_char/>
+        <pad_len/>
+        <init_cap>N</init_cap>
+        <mask_xml>None</mask_xml>
+        <digits>none</digits>
+        <remove_special_characters>none</remove_special_characters>
+      </field>
+      <field>
+        <in_stream_name>unidad_academica_sigla</in_stream_name>
+        <out_stream_name/>
+        <trim_type>both</trim_type>
+        <lower_upper>upper</lower_upper>
+        <padding_type>none</padding_type>
+        <pad_char/>
+        <pad_len/>
+        <init_cap>N</init_cap>
+        <mask_xml>None</mask_xml>
+        <digits>none</digits>
+        <remove_special_characters>none</remove_special_characters>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>880</xloc>
+      <yloc>624</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Sort rows</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>unidad_nivel_codigo</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>unidad_entidad_codigo</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>unidad_academica_codigo</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>976</xloc>
+      <yloc>624</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Stream lookup 2</name>
+    <type>StreamLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <from>Sort rows</from>
+    <input_sorted>N</input_sorted>
+    <preserve_memory>Y</preserve_memory>
+    <sorted_list>N</sorted_list>
+    <integer_pair>N</integer_pair>
+    <lookup>
+      <key>
+        <name>unidad_nivel_codigo</name>
+        <field>unidad_nivel_codigo</field>
+      </key>
+      <key>
+        <name>unidad_entidad_codigo</name>
+        <field>unidad_entidad_codigo</field>
+      </key>
+      <key>
+        <name>unidad_academica_codigo</name>
+        <field>unidad_academica_codigo</field>
+      </key>
+      <value>
+        <name>unidad_nivel_descripcion</name>
+        <rename>unidad_nivel_descripcion</rename>
+        <default/>
+        <type>String</type>
+      </value>
+      <value>
+        <name>unidad_entidad_descripcion</name>
+        <rename>unidad_entidad_descripcion</rename>
+        <default/>
+        <type>String</type>
+      </value>
+      <value>
+        <name>unidad_academica_descripcion</name>
+        <rename>unidad_academica_descripcion</rename>
+        <default/>
+        <type>String</type>
+      </value>
+      <value>
+        <name>unidad_academica_sigla</name>
+        <rename>unidad_academica_sigla</rename>
+        <default/>
+        <type>None</type>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1152</xloc>
+      <yloc>560</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

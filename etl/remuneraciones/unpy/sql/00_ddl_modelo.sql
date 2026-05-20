@@ -9,9 +9,13 @@ CREATE TABLE core.fact_remuneraciones_unpy
 (
   anho INT2
 , mes INT2
-, nivel_codigo INT2
-, entidad_codigo INT2
-, oee_codigo INT2
+, unidad_nivel_codigo INT2
+, unidad_entidad_codigo INT2
+, unidad_academica_codigo INT2
+, unidad_nivel_descripcion TEXT
+, unidad_entidad_descripcion TEXT
+, unidad_academica_descripcion TEXT
+, unidad_academica_sigla TEXT
 , tipo_documento TEXT
 , documento TEXT
 , nombres TEXT
