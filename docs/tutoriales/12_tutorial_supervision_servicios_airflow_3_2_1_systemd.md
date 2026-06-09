@@ -37,7 +37,7 @@ Facultad Politécnica - Universidad Nacional de Asunción
 
 ## Nota sobre esta documentación
 
-Este tutorial fue elaborado para complementar el documento **`09_tutorial_instalacion_configuracion_apache_airflow_3_2_1.md`**, donde se instala Apache Airflow **3.2.1** en el entorno académico de referencia del curso **Introducción a Big Data**.
+Este tutorial fue elaborado para complementar el documento **`11_tutorial_instalacion_configuracion_apache_airflow_3_2_1.md`**, donde se instala Apache Airflow **3.2.1** en el entorno académico de referencia del curso **Introducción a Big Data**.
 
 El documento anterior de supervisión con `systemd` estaba orientado a **Apache Airflow 2.9.3**, por lo que no debe reutilizarse literalmente para Airflow 3.x. En Airflow 3.x existen cambios operativos relevantes:
 
@@ -85,10 +85,10 @@ En un servidor institucional o ambiente productivo, se deben revisar permisos, u
 En una instalación manual de Apache Airflow, es común iniciar los procesos principales desde varias terminales:
 
 ```bash
-airflow api-server --host 0.0.0.0 --port 8080
-airflow scheduler
-airflow dag-processor
-airflow triggerer
+airflow3 api-server --host 0.0.0.0 --port 8080
+airflow3 scheduler
+airflow3 dag-processor
+airflow3 triggerer
 ```
 
 Ese enfoque es válido para una primera validación, pero no es adecuado para operación sostenida. Un entorno de ingeniería de datos necesita que los procesos críticos se comporten como servicios administrados:
@@ -172,10 +172,10 @@ Al finalizar este tutorial, el estudiante será capaz de:
 En el tutorial de instalación de Airflow 3.2.1 se ejecutaban los componentes principales de forma separada para comprender la arquitectura real:
 
 ```bash
-airflow api-server --host 0.0.0.0 --port 8080
-airflow scheduler
-airflow dag-processor
-airflow triggerer
+airflow3 api-server --host 0.0.0.0 --port 8080
+airflow3 scheduler
+airflow3 dag-processor
+airflow3 triggerer
 ```
 
 Ese procedimiento es correcto como validación inicial, pero tiene limitaciones:
@@ -232,18 +232,18 @@ ps -p 1 -o comm=
 systemctl --version
 
 # Activar Airflow 3.2.1
-source /opt/airflow/airflow_3.2.1/scripts/activate_airflow_3.2.1.sh
+source /opt/airflow3/airflow_3.2.1/scripts/activate_airflow_3.2.1.sh
 
 # Cargar variables del laboratorio
 set -a
-source /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+source /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 set +a
 
 # Validar Airflow
-which airflow
-airflow version
-airflow db check
-airflow dags list
+which airflow3
+airflow3 version
+airflow3 db check
+airflow3 dags list
 ```
 
 Resultado esperado:
@@ -364,15 +364,15 @@ Variables de referencia:
 **Instrucciones:**
 
 ```bash
-source /opt/airflow/airflow_3.2.1/scripts/activate_airflow_3.2.1.sh
+source /opt/airflow3/airflow_3.2.1/scripts/activate_airflow_3.2.1.sh
 
 set -a
-source /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+source /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 set +a
 
-airflow version
-airflow db check
-airflow dags list
+airflow3 version
+airflow3 db check
+airflow3 dags list
 ```
 
 **Explicación técnica:**  
@@ -427,19 +427,19 @@ Si se ejecuta en un servidor institucional, puede ser mejor crear un usuario ded
 **Validación:**
 
 ```bash
-ls -lh /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+ls -lh /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 
-sed -n '1,120p' /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+sed -n '1,120p' /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 ```
 
 Debe contener, como mínimo, variables equivalentes a:
 
 ```bash
-AIRFLOW_HOME=/opt/airflow/airflow_3.2.1
-AIRFLOW_CONFIG=/opt/airflow/airflow_3.2.1/configs/airflow.cfg
+AIRFLOW_HOME=/opt/airflow3/airflow_3.2.1
+AIRFLOW_CONFIG=/opt/airflow3/airflow_3.2.1/configs/airflow3.cfg
 
-AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/airflow_3.2.1/dags
-AIRFLOW__CORE__PLUGINS_FOLDER=/opt/airflow/airflow_3.2.1/plugins
+AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow3/airflow_3.2.1/dags
+AIRFLOW__CORE__PLUGINS_FOLDER=/opt/airflow3/airflow_3.2.1/plugins
 AIRFLOW__CORE__DEFAULT_TIMEZONE=America/Asuncion
 AIRFLOW__CORE__EXECUTOR=LocalExecutor
 AIRFLOW__CORE__LOAD_EXAMPLES=False
@@ -449,9 +449,9 @@ AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow3:airflow3_lab_
 AIRFLOW__DATABASE__SQL_ALCHEMY_SCHEMA=airflow3_metastore
 AIRFLOW__DATABASE__SQL_ALCHEMY_POOL_PRE_PING=True
 
-AIRFLOW__LOGGING__BASE_LOG_FOLDER=/opt/airflow/airflow_3.2.1/logs
+AIRFLOW__LOGGING__BASE_LOG_FOLDER=/opt/airflow3/airflow_3.2.1/logs
 AIRFLOW__LOGGING__LOGGING_LEVEL=INFO
-AIRFLOW__LOGGING__DAG_PROCESSOR_CHILD_PROCESS_LOG_DIRECTORY=/opt/airflow/airflow_3.2.1/logs/dag_processor
+AIRFLOW__LOGGING__DAG_PROCESSOR_CHILD_PROCESS_LOG_DIRECTORY=/opt/airflow3/airflow_3.2.1/logs/dag_processor
 
 AIRFLOW__API__HOST=0.0.0.0
 AIRFLOW__API__PORT=8080
@@ -461,7 +461,7 @@ PYTHONUNBUFFERED=1
 Ajustar permisos:
 
 ```bash
-chmod 600 /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+chmod 600 /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 ```
 
 **Explicación técnica:**  
@@ -897,7 +897,7 @@ sudo journalctl -u airflow3-api-server.service \
 **Procesos:**
 
 ```bash
-pgrep -af airflow
+pgrep -af airflow3
 ps aux | grep '[a]irflow'
 ```
 
@@ -938,41 +938,41 @@ No conviene asumir automáticamente que todo comportamiento de `/health` de vers
 **Instrucciones:**
 
 ```bash
-source /opt/airflow/airflow_3.2.1/scripts/activate_airflow_3.2.1.sh
+source /opt/airflow3/airflow_3.2.1/scripts/activate_airflow_3.2.1.sh
 
 set -a
-source /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+source /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 set +a
 
-airflow db check
-airflow dags list
-airflow dags list-import-errors
+airflow3 db check
+airflow3 dags list
+airflow3 dags list-import-errors
 ```
 
 Si existe el DAG de validación del tutorial anterior:
 
 ```bash
-airflow tasks list cit_validacion_airflow3
-airflow dags trigger cit_validacion_airflow3
-airflow dags list-runs -d cit_validacion_airflow3
+airflow3 tasks list cit_validacion_airflow3
+airflow3 dags trigger cit_validacion_airflow3
+airflow3 dags list-runs -d cit_validacion_airflow3
 ```
 
 Validación opcional del scheduler:
 
 ```bash
-airflow jobs check --job-type SchedulerJob --hostname "$(hostname)"
+airflow3 jobs check --job-type SchedulerJob --hostname "$(hostname)"
 ```
 
 Validación opcional del triggerer:
 
 ```bash
-airflow jobs check --job-type TriggererJob --hostname "$(hostname)"
+airflow3 jobs check --job-type TriggererJob --hostname "$(hostname)"
 ```
 
 Si algún comando `jobs check` cambia entre versiones, revisar:
 
 ```bash
-airflow jobs check --help
+airflow3 jobs check --help
 ```
 
 ---
@@ -1145,14 +1145,14 @@ systemctl status airflow3-triggerer.service --no-pager
 sudo ss -tuln | grep ':8080'
 curl -fsS http://localhost:8080/api/v2/monitor/health | python -m json.tool
 
-source /opt/airflow/airflow_3.2.1/scripts/activate_airflow_3.2.1.sh
+source /opt/airflow3/airflow_3.2.1/scripts/activate_airflow_3.2.1.sh
 set -a
-source /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+source /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 set +a
 
-airflow db check
-airflow dags list
-airflow dags list-import-errors
+airflow3 db check
+airflow3 dags list
+airflow3 dags list-import-errors
 ```
 
 ### Evidencia esperada
@@ -1208,9 +1208,9 @@ Y una respuesta JSON del endpoint de salud.
 ### Ajuste recomendado de permisos
 
 ```bash
-sudo chown -R "$(id -un):$(id -gn)" /opt/airflow/airflow_3.2.1
-chmod 700 /opt/airflow/airflow_3.2.1/configs
-chmod 600 /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+sudo chown -R "$(id -un):$(id -gn)" /opt/airflow3/airflow_3.2.1
+chmod 700 /opt/airflow3/airflow_3.2.1/configs
+chmod 600 /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 ```
 
 ### Inspección rápida de consumo de recursos
@@ -1219,7 +1219,7 @@ chmod 600 /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
 systemctl status airflow3.target --no-pager
 ps -o pid,ppid,cmd,%mem,%cpu -C python
 free -h
-df -h /opt/airflow
+df -h /opt/airflow3
 ```
 
 ---
@@ -1337,7 +1337,7 @@ curl -fsS http://localhost:8080/api/v2/monitor/health | python -m json.tool
 ### Validar procesos
 
 ```bash
-pgrep -af airflow
+pgrep -af airflow3
 sudo ss -tuln | grep ':8080'
 ```
 
@@ -1392,13 +1392,13 @@ Cada entorno debe tener su propio archivo de variables:
 Cada archivo debe definir, como mínimo:
 
 ```bash
-AIRFLOW_HOME=/opt/airflow/airflow_3.2.1
-AIRFLOW_CONFIG=/opt/airflow/airflow_3.2.1/configs/airflow.cfg
+AIRFLOW_HOME=/opt/airflow3/airflow_3.2.1
+AIRFLOW_CONFIG=/opt/airflow3/airflow_3.2.1/configs/airflow3.cfg
 AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://usuario:password@localhost:5432/base
 AIRFLOW__DATABASE__SQL_ALCHEMY_SCHEMA=esquema
 AIRFLOW__API__PORT=8080
-AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/airflow_3.2.1/dags
-AIRFLOW__LOGGING__BASE_LOG_FOLDER=/opt/airflow/airflow_3.2.1/logs
+AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow3/airflow_3.2.1/dags
+AIRFLOW__LOGGING__BASE_LOG_FOLDER=/opt/airflow3/airflow_3.2.1/logs
 PYTHONUNBUFFERED=1
 ```
 

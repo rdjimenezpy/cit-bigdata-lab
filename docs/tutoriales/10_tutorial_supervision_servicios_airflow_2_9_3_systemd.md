@@ -118,11 +118,11 @@ airflow2-webserver.service
 Comando útiles para que lo uses como referencia en tus entornos de laboratorio
 
 ```bash
-# Para filtrar los servicios en **systemctl** que comienzan con un patrón específico (por ejemplo, `airflow*`)
-systemctl list-units --type=service 'airflow*'
+# Para filtrar los servicios en **systemctl** que comienzan con un patrón específico (por ejemplo, `airflow3*`)
+systemctl list-units --type=service 'airflow3*'
 
 # Esto te mostrará si están enabled, disabled, static o masked
-systemctl list-unit-files --type=service 'airflow*'
+systemctl list-unit-files --type=service 'airflow3*'
 
 # Deshabilita el arranque automático del servicio.
 sudo systemctl disable airflow2-triggerer.service airflow2-scheduler@.service airflow2-webserver.service
@@ -158,13 +158,13 @@ sudo nano /etc/default/airflow2.env
 Contenido:
 
 ```bash
-AIRFLOW_HOME=/opt/airflow/airflow_2.9.3
-AIRFLOW_CONFIG=/opt/airflow/airflow_2.9.3/configs/airflow.cfg
+AIRFLOW_HOME=/opt/airflow3/airflow_2.9.3
+AIRFLOW_CONFIG=/opt/airflow3/airflow_2.9.3/configs/airflow3.cfg
 PYTHONUNBUFFERED=1
 
-## Opcionales: útiles para webserver (mapean a [core], [loggin], [webserver] en airflow.cfg)
+## Opcionales: útiles para webserver (mapean a [core], [loggin], [webserver] en airflow3.cfg)
 # [logging]
-#AIRFLOW__LOGGING__BASE_LOG_FOLDER=/opt/airflow/airflow_2.9.3/logs
+#AIRFLOW__LOGGING__BASE_LOG_FOLDER=/opt/airflow3/airflow_2.9.3/logs
 
 # [webserver]
 #AIRFLOW__WEBSERVER__WEB_SERVER_PORT=8080
@@ -505,8 +505,8 @@ journalctl -u airflow2-webserver -e -n 100
 ## 13. Verificaciones de procesos y puertos
 
 ```bash
-ps aux | grep airflow
-pgrep -af airflow
+ps aux | grep airflow3
+pgrep -af airflow3
 ```
 
 Puerto 8080:

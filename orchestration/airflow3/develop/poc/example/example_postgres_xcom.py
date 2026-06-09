@@ -10,7 +10,7 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
 
 # Definir el DAG
 default_args = {
-    'owner': 'airflow',
+    'owner': 'airflow3',
     'start_date': None,
     'depends_on_past': False,
     'retries': 0,

@@ -18,7 +18,7 @@ TODAY = datetime.now(TZ).strftime('%Y-%m-%d')
 
 # Definir los argumentos por defecto del DAG
 default_args = {
-    'owner': 'airflow',
+    'owner': 'airflow3',
     'start_date': days_ago(0),
     'retries': 0,
 }

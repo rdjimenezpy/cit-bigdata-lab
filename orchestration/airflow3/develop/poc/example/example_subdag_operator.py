@@ -16,7 +16,7 @@ dag_id = "example_subdag_operator_id"
 dag_display_name = "example_subdag_operator"
 description="Ejemplo DAG que demuestra el uso de SubDagOperator."
 default_args = {
-    'owner': 'airflow',
+    'owner': 'airflow3',
     'start_date': None,
     'depends_on_past': False,
     'retries': 0,

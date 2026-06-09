@@ -532,7 +532,7 @@ export POSTGRES_USER=postgres
 export POSTGRES_PASSWORD=postgres
 export POSTGRES_DBINIT=${REPO_ROOT}/database/postgresql/ddl/db_init.sql
 export DUCKDB_PATH=./data/duckdb/bigdata_lab.duckdb
-export AIRFLOW_HOME=/opt/airflow/airflow_3.1.8
+export AIRFLOW_HOME=/opt/airflow3/airflow_3.1.8
 export PENTAHO_HOME=/opt/pentaho/data-integration
 ```
 

@@ -5,19 +5,19 @@ source venv/bin/activate
 
 echo "Iniciando servicios de Apache Airflow..."
 
-airflow webserver -D
+airflow3 webserver -D
 echo "Webserver iniciado."
 
-airflow scheduler -D
+airflow3 scheduler -D
 sleep 2
 pkill -9 -f "airflow scheduler"
 sleep 2
-airflow scheduler -D
+airflow3 scheduler -D
 echo "Scheduler iniciado."
 
-airflow triggerer -D
+airflow3 triggerer -D
 pkill -9 -f 'triggerer'
-airflow triggerer -D
+airflow3 triggerer -D
 echo "Triggerer iniciado."
 
 echo "Todos los servicios se han iniciado."

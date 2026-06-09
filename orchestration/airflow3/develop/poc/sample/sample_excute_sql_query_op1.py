@@ -37,7 +37,7 @@ with dag:
     task_execute_sql = SQLExecuteQueryOperator(
         task_id='execute_sql',
         sql='postgres_operator_v1.sql',  # Ruta al archivo SQL
-        conn_id='postgres_default',  # Nombre de la conexión configurada en el airflow web
+        conn_id='postgres_default',  # Nombre de la conexión configurada en el airflow3 web
     )
 
     end = EmptyOperator(task_id='end', dag=dag)

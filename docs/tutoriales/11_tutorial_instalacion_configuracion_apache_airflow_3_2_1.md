@@ -318,10 +318,10 @@ Variables utilizadas en los ejemplos:
 **Instrucciones:**
 
 ```bash
-sudo mkdir -p /opt/airflow
-sudo chown -R "$USER:$USER" /opt/airflow
+sudo mkdir -p /opt/airflow3
+sudo chown -R "$USER:$USER" /opt/airflow3
 
-mkdir -p /opt/airflow/airflow_3.2.1/{venv,configs,dags,logs,plugins,scripts,data,outputs}
+mkdir -p /opt/airflow3/airflow_3.2.1/{venv,configs,dags,logs,plugins,scripts,data,outputs}
 ```
 
 **Explicación técnica:**  
@@ -330,7 +330,7 @@ Cada versión de Airflow debe vivir en su propio directorio. Esto permite compar
 **Resultado esperado:**
 
 ```bash
-ls -la /opt/airflow/airflow_3.2.1
+ls -la /opt/airflow3/airflow_3.2.1
 ```
 
 Debe observarse una estructura con carpetas `venv`, `configs`, `dags`, `logs`, `plugins`, `scripts`, `data` y `outputs`.
@@ -366,8 +366,8 @@ No conviene instalar Airflow con el Python global del sistema si se busca reprod
 **Instrucciones:**
 
 ```bash
-python -m venv /opt/airflow/airflow_3.2.1/venv
-source /opt/airflow/airflow_3.2.1/venv/bin/activate
+python -m venv /opt/airflow3/airflow_3.2.1/venv
+source /opt/airflow3/airflow_3.2.1/venv/bin/activate
 
 python --version
 which python
@@ -388,12 +388,12 @@ which pip
 **Objetivo del paso:** facilitar la activación repetible del entorno de Airflow.
 
 **Archivo:**  
-`/opt/airflow/airflow_3.2.1/scripts/activate_airflow_lab_3.2.1.sh`
+`/opt/airflow/airflow_3.2.1/scripts/activate_airflow3_lab.sh`
 
 **Instrucciones:**
 
 ```bash
-cat > /opt/airflow/airflow_3.2.1/scripts/activate_airflow_lab_3.2.1.sh <<'EOF_SCRIPT'
+cat > /opt/airflow3/airflow_3.2.1/scripts/activate_airflow3_lab.sh <<'EOF_SCRIPT'
 #!/bin/bash
 
 source /opt/airflow/airflow_3.2.1/venv/bin/activate
@@ -412,19 +412,21 @@ echo "Entorno: Laboratorio"
 echo "Repositorio: cit-bigdata-lab/main"
 echo "AIRFLOW_HOME=${AIRFLOW_HOME}"
 echo "AIRFLOW_CONFIG=${AIRFLOW_CONFIG}"
+echo "AIRFLOW_DAGS_FOLDER=${AIRFLOW__CORE__DAGS_FOLDER}"
+echo "AIRFLOW_PORT=$AIRFLOW__API__PORT"
 EOF_SCRIPT
 ```
 
 Luego:
 
 ```bash
-chmod +x /opt/airflow/airflow_3.2.1/scripts/activate_airflow_lab_3.2.1.sh
+chmod +x /opt/airflow3/airflow_3.2.1/scripts/activate_airflow3_lab.sh
 ```
 
 Activar:
 
 ```bash
-source /opt/airflow/airflow_3.2.1/scripts/activate_airflow_lab_3.2.1.sh
+source /opt/airflow3/airflow_3.2.1/scripts/activate_airflow3_lab.sh
 ```
 
 **Resultado esperado:**  
@@ -442,7 +444,7 @@ El prompt debe quedar dentro del entorno virtual y las variables `AIRFLOW_HOME` 
 cat >> ~/.bashrc <<'EOF_ALIAS'
 
 # Apache Airflow 3.2.1 - laboratorio CIT Big Data
-alias airflow3-lab='source /opt/airflow/airflow_3.2.1/scripts/activate_airflow_lab_3.2.1.sh'
+alias airflow3-lab='source /opt/airflow/airflow_3.2.1/scripts/activate_airflow3_lab.sh'
 EOF_ALIAS
 ```
 
@@ -470,7 +472,7 @@ Al ejecutar `airflow3`, se activa el entorno virtual y se configuran las variabl
 **Instrucciones:**
 
 ```bash
-cd /opt/airflow/airflow_3.2.1/data
+cd /opt/airflow3/airflow_3.2.1/data
 
 curl -fL \
   "https://raw.githubusercontent.com/apache/airflow/constraints-3.2.1/constraints-3.12.txt" \
@@ -486,7 +488,7 @@ Airflow es al mismo tiempo una aplicación y una librería Python. Por eso, una 
 Debe existir el archivo:
 
 ```bash
-ls -lh /opt/airflow/airflow_3.2.1/data/constraints-3.12.txt
+ls -lh /opt/airflow3/airflow_3.2.1/data/constraints-3.12.txt
 ```
 
 ---
@@ -538,8 +540,8 @@ pip install \
 **Validación:**
 
 ```bash
-which airflow
-airflow version
+which airflow3
+airflow3 version
 pip check
 ```
 
@@ -569,9 +571,9 @@ pip install "apache-airflow==3.2.1" duckdb python-dotenv
 **Instrucciones:**
 
 ```bash
-airflow config list --defaults > /opt/airflow/airflow_3.2.1/configs/airflow_lab.cfg
+airflow3 config list --defaults > /opt/airflow3/airflow_3.2.1/configs/airflow_lab.cfg
 
-airflow db check || true
+airflow3 db check || true
 ```
 
 **Inicializar el archivo `airflow_lab.cfg`:**
@@ -632,7 +634,7 @@ La contraseña usada en este tutorial es didáctica. En un ambiente instituciona
 **Instrucciones:**
 
 ```bash
-cat > /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env <<'EOF_ENV'
+cat > /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env <<'EOF_ENV'
 # ==========================================================
 # Apache Airflow 3.2.1 - entorno LAB
 # ==========================================================
@@ -641,7 +643,7 @@ AIRFLOW_HOME=/opt/airflow/airflow_3.2.1
 AIRFLOW_CONFIG=/opt/airflow/airflow_3.2.1/configs/airflow_lab.cfg
 
 # Core
-AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/airflow_3.2.1/dags
+AIRFLOW__CORE__DAGS_FOLDER=/opt/repo/cit-bigdata-lab/orchestration/airflow3/dags
 AIRFLOW__CORE__PLUGINS_FOLDER=/opt/airflow/airflow_3.2.1/plugins
 AIRFLOW__CORE__DEFAULT_TIMEZONE=America/Asuncion
 AIRFLOW__CORE__EXECUTOR=LocalExecutor
@@ -674,31 +676,34 @@ AIRFLOW__METRICS__STATSD_ON=False
 
 # API Server
 AIRFLOW__API__HOST=0.0.0.0
-AIRFLOW__API__PORT=8080
+AIRFLOW__API__PORT=8081
 
+# Definir usuario y grupo Linux para los servicios
+AIRFLOW_SERVICE_USER="$(id -un)"
+AIRFLOW_SERVICE_GROUP="$(id -gn)"
 EOF_ENV
 ```
 
 Luego:
 
 ```bash
-chmod 600 /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+chmod 600 /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 ```
 
 Cargar variables en la sesión actual:
 
 ```bash
 set -a
-source /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+source /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 set +a
 ```
 
 **Validación:**
 
 ```bash
-airflow config get-value core executor
-airflow config get-value database sql_alchemy_conn
-airflow config get-value core auth_manager
+airflow3 config get-value core executor
+airflow3 config get-value database sql_alchemy_conn
+airflow3 config get-value core auth_manager
 ```
 
 **Resultado esperado:**
@@ -720,20 +725,20 @@ Airflow 3.x usa `SimpleAuthManager` por defecto. Si se desea mantener una experi
 **Configurar FAB:**
 
 ```bash
-export AIRFLOW__CORE__AUTH_MANAGER=airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
+export AIRFLOW__CORE__AUTH_MANAGER=airflow3.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
 ```
 
 O editar `airflow3_lab.env`:
 
 ```bash
-AIRFLOW__CORE__AUTH_MANAGER=airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
+AIRFLOW__CORE__AUTH_MANAGER=airflow3.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
 ```
 
 Luego cargar de nuevo variables:
 
 ```bash
 set -a
-source /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+source /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 set +a
 ```
 
@@ -748,10 +753,10 @@ No cambiar de `SimpleAuthManager` a `FabAuthManager` en un entorno con usuarios 
 
 ```bash
 # Cargar las variables de la instancia de airflow3-lab
-source /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+source /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 
 # Verificar conexión a la base de datos configurado en AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
-airflow db check
+airflow3 db check
 ```
 
 **Objetivo del paso:** crear las tablas internas de Airflow en PostgreSQL.
@@ -759,7 +764,7 @@ airflow db check
 **Instrucciones:**
 
 ```bash
-airflow db migrate
+airflow3 db migrate
 ```
 
 **Explicación técnica:**  
@@ -784,7 +789,7 @@ Deben existir tablas internas de Airflow dentro del esquema `airflow3_metastore`
 **Aplicar solo si `auth_manager` es FAB:**
 
 ```bash
-airflow config get-value core auth_manager
+airflow3 config get-value core auth_manager
 ```
 
 Debe devolver:
@@ -796,7 +801,7 @@ airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
 Crear usuario:
 
 ```bash
-airflow users create \
+airflow3 users create \
   --username admin \
   --firstname Admin \
   --lastname CIT \
@@ -823,7 +828,7 @@ La contraseña será generada o administrada por el Simple Auth Manager según l
 **Instrucciones:**
 
 ```bash
-airflow standalone
+airflow3 standalone
 ```
 
 **Explicación técnica:**  
@@ -851,32 +856,32 @@ Abrir cuatro terminales distintas. En cada una ejecutar:
 ```bash
 airflow3
 set -a
-source /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+source /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 set +a
 ```
 
 #### Terminal 1 — API Server
 
 ```bash
-airflow api-server -D --host 0.0.0.0 --port 8080
+airflow3 api-server -D --host 0.0.0.0 --port 8080
 ```
 
 #### Terminal 2 — Scheduler
 
 ```bash
-airflow scheduler -D
+airflow3 scheduler -D
 ```
 
 #### Terminal 3 — DAG Processor
 
 ```bash
-airflow dag-processor -D
+airflow3 dag-processor -D
 ```
 
 #### Terminal 4 — Triggerer
 
 ```bash
-airflow triggerer -D
+airflow3 triggerer -D
 ```
 
 **Resultado esperado:**  
@@ -901,7 +906,7 @@ En Airflow 3.x, el `dag-processor` ya no debe ignorarse. Si este proceso no est�
 **Instrucciones:**
 
 ```bash
-cat > /opt/airflow/airflow_3.2.1/dags/cit_validacion_airflow3.py <<'EOF_DAG'
+cat > /opt/airflow3/airflow_3.2.1/dags/cit_validacion_airflow3.py <<'EOF_DAG'
 from __future__ import annotations
 
 import pendulum
@@ -942,8 +947,8 @@ EOF_DAG
 **Validar importación del DAG:**
 
 ```bash
-python /opt/airflow/airflow_3.2.1/dags/cit_validacion_airflow3.py
-airflow dags list | grep cit_validacion_airflow3
+python /opt/airflow3/airflow_3.2.1/dags/cit_validacion_airflow3.py
+airflow3 dags list | grep cit_validacion_airflow3
 ```
 
 **Resultado esperado:**  
@@ -958,21 +963,21 @@ El DAG `cit_validacion_airflow3` debe aparecer listado en Airflow.
 **Instrucciones:**
 
 ```bash
-airflow tasks list cit_validacion_airflow3
+airflow3 tasks list cit_validacion_airflow3
 
-airflow tasks test cit_validacion_airflow3 extraer 2026-01-01
+airflow3 tasks test cit_validacion_airflow3 extraer 2026-01-01
 ```
 
 Ejecutar un DAG manualmente desde CLI:
 
 ```bash
-airflow dags trigger cit_validacion_airflow3
+airflow3 dags trigger cit_validacion_airflow3
 ```
 
 Ver estado:
 
 ```bash
-airflow dags list-runs -d cit_validacion_airflow3
+airflow3 dags list-runs -d cit_validacion_airflow3
 ```
 
 **Resultado esperado:**  
@@ -1010,36 +1015,36 @@ Luego de instalar Airflow con *constraints*, las dependencias adicionales deben 
 airflow3
 
 # Ver versión
-airflow version
+airflow3 version
 
 # Ver configuración efectiva
-airflow config list
+airflow3 config list
 
 # Ver un valor específico
-airflow config get-value core executor
-airflow config get-value core auth_manager
-airflow config get-value database sql_alchemy_conn
+airflow3 config get-value core executor
+airflow3 config get-value core auth_manager
+airflow3 config get-value database sql_alchemy_conn
 
 # Validar base de datos
-airflow db check
+airflow3 db check
 
 # Aplicar migraciones
-airflow db migrate
+airflow3 db migrate
 
 # Listar DAGs
-airflow dags list
+airflow3 dags list
 
 # Listar tareas de un DAG
-airflow tasks list cit_validacion_airflow3
+airflow3 tasks list cit_validacion_airflow3
 
 # Probar una tarea
-airflow tasks test cit_validacion_airflow3 extraer 2026-01-01
+airflow3 tasks test cit_validacion_airflow3 extraer 2026-01-01
 
 # Lanzar un DAG manualmente
-airflow dags trigger cit_validacion_airflow3
+airflow3 dags trigger cit_validacion_airflow3
 
 # Listar ejecuciones
-airflow dags list-runs -d cit_validacion_airflow3
+airflow3 dags list-runs -d cit_validacion_airflow3
 ```
 
 ---
@@ -1062,17 +1067,17 @@ Al finalizar el procedimiento, verificar al menos lo siguiente:
 ```bash
 airflow3
 set -a
-source /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+source /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 set +a
 
-which airflow
-airflow version
+which airflow3
+airflow3 version
 pip check
 
-airflow db check
-airflow config get-value core executor
-airflow config get-value core auth_manager
-airflow dags list | grep cit_validacion_airflow3
+airflow3 db check
+airflow3 config get-value core executor
+airflow3 config get-value core auth_manager
+airflow3 dags list | grep cit_validacion_airflow3
 ```
 
 ### Evidencia esperada
@@ -1187,43 +1192,43 @@ El siguiente paso recomendado es construir un DAG real del curso que integre des
 
 ```bash
 # Activar entorno
-source /opt/airflow/airflow_3.2.1/scripts/activate_airflow_3.2.1.sh
+source /opt/airflow3/airflow_3.2.1/scripts/activate_airflow_3.2.1.sh
 
 # Cargar variables del laboratorio
 set -a
-source /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+source /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 set +a
 
 # Verificar versión
-airflow version
+airflow3 version
 
 # Validar base
-airflow db check
+airflow3 db check
 
 # Migrar metadata database
-airflow db migrate
+airflow3 db migrate
 
 # Ejecutar componentes principales
 # Terminal 1
-airflow api-server --host 0.0.0.0 --port 8080
+airflow3 api-server --host 0.0.0.0 --port 8080
 
 # Terminal 2
-airflow scheduler
+airflow3 scheduler
 
 # Terminal 3
-airflow dag-processor
+airflow3 dag-processor
 
 # Terminal 4
-airflow triggerer
+airflow3 triggerer
 
 # Validar DAGs
-airflow dags list
+airflow3 dags list
 
 # Probar tarea
-airflow tasks test cit_validacion_airflow3 extraer 2026-01-01
+airflow3 tasks test cit_validacion_airflow3 extraer 2026-01-01
 
 # Disparar DAG
-airflow dags trigger cit_validacion_airflow3
+airflow3 dags trigger cit_validacion_airflow3
 ```
 
 ---
@@ -1243,7 +1248,7 @@ Usar el mismo archivo:
 Asegurar permisos:
 
 ```bash
-chmod 600 /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+chmod 600 /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 ```
 
 ### 2. Servicio API Server

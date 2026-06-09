@@ -10,7 +10,7 @@ with DAG(dag_id="demo", start_date=datetime(2026, 5, 1), schedule="0 0 * * *") a
 
     @task()
     def airflow():
-        print("airflow")
+        print("airflow3")
 
     # Set dependencies between tasks
     hello >> airflow()

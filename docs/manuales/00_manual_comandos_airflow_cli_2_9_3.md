@@ -49,7 +49,7 @@ Además, existen **servicios principales** (`webserver` / `scheduler` / `trigger
 El comando:
 
 ```bash
-airflow -h
+airflow3 -h
 ```
 
 permite visualizar la **ayuda general del intérprete de línea de comandos (CLI)** de Apache Airflow. Proporciona una visión estructurada de los **grupos de comandos**, **comandos operativos** y **opciones globales**, constituyendo el punto de entrada natural para la administración y exploración del sistema.
@@ -59,7 +59,7 @@ Desde una perspectiva didáctica, este comando actúa como un *mapa conceptual* 
 #### Uso General
 
 ```bash
-airflow [-h] GROUP_OR_COMMAND ...
+airflow3 [-h] GROUP_OR_COMMAND ...
 ```
 
 Donde `GROUP_OR_COMMAND` representa un **grupo de gestión** o un **comando operativo específico**.
@@ -124,19 +124,19 @@ Permite **consultar y depurar** la configuración activa de Airflow (`airflow.cf
 Lista toda la configuración activa:
 
 ```bash
-airflow config list
+airflow3 config list
 ```
 
 Útil para verificar conexión a PostgreSQL (como en tu instalación):
 
 ```bash
-airflow config get-value database sql_alchemy_conn
+airflow3 config get-value database sql_alchemy_conn
 ```
 
 Útil para verificar el ecanismo de ejecución de tareas:
 
 ```bash
-airflow config get-value core executor
+airflow3 config get-value core executor
 ```
 
 El parámetro `executor` en la sección [core] de Apache Airflow 2.9.3 define el mecanismo de ejecución de tareas que usará el **Scheduler**. En otras palabras, indica cómo y dónde se lanzarán los tasks de tus DAGs (procesos locales, multiproceso, Celery, Kubernetes, etc.).
@@ -211,13 +211,13 @@ Administra credenciales y endpoints hacia sistemas externos (BDs, APIs, FTP, etc
 ### Listar conexiones
 
 ```bash
-airflow connections list
+airflow3 connections list
 ```
 
 ### Crear conexión PostgreSQL
 
 ```bash
-airflow connections add postgres_analytics \
+airflow3 connections add postgres_analytics \
   --conn-type postgres \
   --conn-host localhost \
   --conn-schema analytics_db \
@@ -229,7 +229,7 @@ airflow connections add postgres_analytics \
 ### Probar conexión
 
 ```bash
-airflow connections test postgres_analytics
+airflow3 connections test postgres_analytics
 ```
 
 ### Aplicación
@@ -244,26 +244,26 @@ airflow connections test postgres_analytics
 ### Listar DAGs disponibles
 
 ```bash
-airflow dags list
+airflow3 dags list
 ```
 
 ### Ver detalles de un DAG
 
 ```bash
-airflow dags show dag_etl_nomina
+airflow3 dags show dag_etl_nomina
 ```
 
 ### Activar / desactivar DAG
 
 ```bash
-airflow dags unpause dag_etl_nomina
-airflow dags pause dag_etl_nomina
+airflow3 dags unpause dag_etl_nomina
+airflow3 dags pause dag_etl_nomina
 ```
 
 ### Ejecutar manualmente un DAG
 
 ```bash
-airflow dags trigger dag_etl_nomina
+airflow3 dags trigger dag_etl_nomina
 ```
 
 ### Aplicación
@@ -280,7 +280,7 @@ airflow dags trigger dag_etl_nomina
 Gestiona procesos internos de Airflow (scheduler jobs, local task jobs, etc.).
 
 ```bash
-airflow jobs check --job-type SchedulerJob
+airflow3 jobs check --job-type SchedulerJob
 ```
 
 ### Aplicación
@@ -296,7 +296,7 @@ airflow jobs check --job-type SchedulerJob
 ### Listar providers instalados
 
 ```bash
-airflow providers list
+airflow3 providers list
 ```
 
 ### Aplicación
@@ -311,15 +311,15 @@ airflow providers list
 ## 8. `airflow roles` — Gestión de Roles (RBAC)
 
 ```bash
-airflow roles list
+airflow3 roles list
 ```
 
 ```bash
-airflow roles create data_engineer
+airflow3 roles create data_engineer
 ```
 
 ```bash
-airflow roles add-perms data_engineer \
+airflow3 roles add-perms data_engineer \
   --resource DAG \
   --action read
 ```
@@ -335,16 +335,16 @@ airflow roles add-perms data_engineer \
 ## 9. `airflow users` — Gestión de Usuarios
 
 ```bash
-airflow users list
+airflow3 users list
 ```
 
 ```bash
-airflow users create \
+airflow3 users create \
   --username admin \
   --firstname Admin \
   --lastname User \
   --role Admin \
-  --email admin@airflow.local \
+  --email admin@airflow3.local \
   --password admin123
 ```
 
@@ -359,11 +359,11 @@ airflow users create \
 ## 10. `airflow tasks` — Gestión de Tareas
 
 ```bash
-airflow tasks list dag_etl_nomina
+airflow3 tasks list dag_etl_nomina
 ```
 
 ```bash
-airflow tasks test dag_etl_nomina extract_task 2025-01-01
+airflow3 tasks test dag_etl_nomina extract_task 2025-01-01
 ```
 
 ### Aplicación
@@ -377,15 +377,15 @@ airflow tasks test dag_etl_nomina extract_task 2025-01-01
 ## 11. `airflow variables` — Gestión de Variables
 
 ```bash
-airflow variables list
+airflow3 variables list
 ```
 
 ```bash
-airflow variables set ENVIRONMENT prod
+airflow3 variables set ENVIRONMENT prod
 ```
 
 ```bash
-airflow variables get ENVIRONMENT
+airflow3 variables get ENVIRONMENT
 ```
 
 ### Aplicación
@@ -403,7 +403,7 @@ airflow variables get ENVIRONMENT
 ## 12. `airflow cheat-sheet`
 
 ```bash
-airflow cheat-sheet
+airflow3 cheat-sheet
 ```
 
 Resumen rápido de comandos.  
@@ -414,7 +414,7 @@ Ideal como material de consulta para estudiantes.
 ## 13. `airflow dag-processor`
 
 ```bash
-airflow dag-processor
+airflow3 dag-processor
 ```
 
 Ejecuta un procesador de DAGs independiente.
@@ -428,7 +428,7 @@ Uso avanzado, útil para:
 ## 14. `airflow info`
 
 ```bash
-airflow info
+airflow3 info
 ```
 
 Muestra **estado completo del entorno** Apache AIrflow y el sistema operativo.  
@@ -438,7 +438,7 @@ Muestra **estado completo del entorno** Apache AIrflow y el sistema operativo.
 ## 15. `airflow plugins`
 
 ```bash
-airflow plugins
+airflow3 plugins
 ```
 
 Lista plugins cargados.
@@ -448,7 +448,7 @@ Lista plugins cargados.
 ## 16. `airflow rotate-fernet-key`
 
 ```bash
-airflow rotate-fernet-key
+airflow3 rotate-fernet-key
 ```
 
 Rota claves de cifrado de conexiones y variables.
@@ -460,7 +460,7 @@ Uso recomendado en entornos productivos.
 ## 17. `airflow standalone`
 
 ```bash
-airflow standalone
+airflow3 standalone
 ```
 
 Arranca Airflow todo-en-uno (solo desarrollo).
@@ -472,7 +472,7 @@ No recomendado para producción, pero muy útil en enseñanza.
 ## 18. `airflow sync-perm`
 
 ```bash
-airflow sync-perm
+airflow3 sync-perm
 ```
 
 Sincroniza permisos entre DAGs, roles y usuarios.
@@ -482,7 +482,7 @@ Sincroniza permisos entre DAGs, roles y usuarios.
 ## 19. `airflow version`
 
 ```bash
-airflow version
+airflow3 version
 ```
 
 Salida:
@@ -504,7 +504,7 @@ Salida:
 Interfaz gráfica (UI).
 
 ```bash
-airflow webserver --port 8080
+airflow3 webserver --port 8080
 ```
 
 Acceso:
@@ -525,7 +525,7 @@ Corazón del sistema:
 - Envía tareas al `executor`.
 
 ```bash
-airflow scheduler
+airflow3 scheduler
 ```
 
 ---
@@ -537,7 +537,7 @@ airflow scheduler
 Gestiona **deferrable operators** y sensores asíncronos.
 
 ```bash
-airflow triggerer
+airflow3 triggerer
 ```
 
 Uso clave en pipelines modernos y eficientes.
@@ -587,7 +587,7 @@ Puedes usar la CLI de Airflow para auditar ejecuciones:
 - Listar ejecuciones de un DAG:
     
     ```bash
-    airflow dags list-runs -d servicios_roaming_dag
+    airflow3 dags list-runs -d servicios_roaming_dag
     ```
     
     Esto muestra todas las ejecuciones con su estado y fecha.
@@ -595,8 +595,8 @@ Puedes usar la CLI de Airflow para auditar ejecuciones:
 - Listar tareas de una ejecución específica:
     
     ```bash
-    airflow tasks list servicios_roaming_dag
-    airflow tasks states servicios_roaming_dag <execution_date>
+    airflow3 tasks list servicios_roaming_dag
+    airflow3 tasks states servicios_roaming_dag <execution_date>
     ```
     
 

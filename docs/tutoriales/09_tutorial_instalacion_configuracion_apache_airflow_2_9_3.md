@@ -193,14 +193,14 @@ La simplicidad aquí no es pobreza conceptual, es disciplina.
 ## 5. Creación del directorio base y permisos
 
 ```bash
-sudo mkdir -p /opt/airflow
-sudo chown -R $USER:$USER /opt/airflow
+sudo mkdir -p /opt/airflow3
+sudo chown -R $USER:$USER /opt/airflow3
 ```
 
 Crear estructura para Airflow 2.9.3:
 
 ```bash
-mkdir -p /opt/airflow/airflow_2.9.3/{venv,configs,dags,logs,plugins,scripts,data,outputs}
+mkdir -p /opt/airflow3/airflow_2.9.3/{venv,configs,dags,logs,plugins,scripts,data,outputs}
 ```
 
 ---
@@ -216,7 +216,7 @@ pyenv shell 3.12.5
 Crear el entorno virtual:
 
 ```bash
-python -m venv /opt/airflow/airflow_2.9.3/venv
+python -m venv /opt/airflow3/airflow_2.9.3/venv
 ```
 
 ---
@@ -228,10 +228,10 @@ Archivo:
 
 ```bash
 #!/bin/bash
-source /opt/airflow/airflow_2.9.3/venv/bin/activate
+source /opt/airflow3/airflow_2.9.3/venv/bin/activate
 
-export AIRFLOW_HOME=/opt/airflow/airflow_2.9.3
-export AIRFLOW_CONFIG=/opt/airflow/airflow_2.9.3/configs/airflow.cfg
+export AIRFLOW_HOME=/opt/airflow3/airflow_2.9.3
+export AIRFLOW_CONFIG=/opt/airflow3/airflow_2.9.3/configs/airflow3.cfg
 
 echo "Entorno de Airflow 2.9.3 activado."
 ```
@@ -239,13 +239,13 @@ echo "Entorno de Airflow 2.9.3 activado."
 Permisos:
 
 ```bash
-chmod +x /opt/airflow/airflow_2.9.3/scripts/activate_airflow_2.9.3.sh
+chmod +x /opt/airflow3/airflow_2.9.3/scripts/activate_airflow_2.9.3.sh
 ```
 
 Activación manual:
 
 ```bash
-source /opt/airflow/airflow_2.9.3/scripts/activate_airflow_2.9.3.sh
+source /opt/airflow3/airflow_2.9.3/scripts/activate_airflow_2.9.3.sh
 ```
 
 Para salir o desactivar un entorno virtual de Python (venv)
@@ -264,7 +264,7 @@ Agregar a `~/.bashrc`:
 nano ~/.bashrc
 
 # Alias para activar entornos de Airflow
-alias airflow2='source /opt/airflow/airflow_2.9.3/scripts/activate_airflow_2.9.3.sh'
+alias airflow2='source /opt/airflow3/airflow_2.9.3/scripts/activate_airflow_2.9.3.sh'
 ```
 
 Recargar:
@@ -284,7 +284,7 @@ airflow2
 ## 9. Descarga del archivo de *constraints*
 
 ```bash
-cd /opt/airflow/airflow_2.9.3/data
+cd /opt/airflow3/airflow_2.9.3/data
 
 wget https://github.com/apache/airflow/blob/constraints-2.9.3/constraints-3.12.txt?raw=true \
      -O constraints-3.12.txt
@@ -312,8 +312,8 @@ pip install \
 Verificación:
 
 ```bash
-which airflow
-airflow version
+which airflow3
+airflow3 version
 ```
 
 Para instalar **pandas** respetando las restricciones de versiones que Airflow publica en su archivo de _constraints_, el comando correcto sería:
@@ -361,7 +361,7 @@ statsd_on = False
 > Uso exclusivo para validación rápida del entorno
 
 ```bash
-airflow standalone
+airflow3 standalone
 ```
 
 Esto levanta temporalmente:
@@ -382,7 +382,7 @@ Crear base y usuario:
 -- 1. Crear la base de datos
 CREATE DATABASE airflow_metadata;
 
--- 2. Crear esquema para tablas de airflow
+-- 2. Crear esquema para tablas de airflow3
 CREATE SCHEMA airflow2;
 
 -- 3. Crear un usuario dedicado (opcional pero recomendado)
@@ -410,7 +410,7 @@ WHERE rolname = 'airflow_user';
 Mover el archivo generado:
 
 ```bash
-mv $AIRFLOW_HOME/airflow.cfg $AIRFLOW_HOME/configs/airflow.cfg
+mv $AIRFLOW_HOME/airflow3.cfg $AIRFLOW_HOME/configs/airflow3.cfg
 ```
 
 Editar en `airflow.cfg`:
@@ -424,20 +424,20 @@ sql_alchemy_schema = airflow2
 Este es el método recomendado porque te muestra el valor real que Airflow está interpretando, ya sea que venga de una variable de entorno o del archivo `airflow.cfg`.
 
 ```bash
-airflow config get-value database sql_alchemy_conn
+airflow3 config get-value database sql_alchemy_conn
 ```
 
 ## 14. Inicialización de la base de datos
 
 ```bash
-# 1. Verificar conexión airflow
-airflow db check
+# 1. Verificar conexión airflow3
+airflow3 db check
 
 # 2. Aplicar esquema
-airflow db migrate
+airflow3 db migrate
 
 # 3. Crear el usuario administrador (necesario para la UI)
-airflow users create \
+airflow3 users create \
     --username admin \
     --firstname Richard \
     --lastname Jiménez \
@@ -449,7 +449,7 @@ airflow users create \
 Verificar la creación real del usuario
 
 ```bash
-airflow users list
+airflow3 users list
 ```
 
 ---
@@ -477,7 +477,7 @@ pip install pandas==2.1.4 \
 Verificar `provider` actual:
 
 ```bash
-airflow providers list | grep -i postgres || true
+airflow3 providers list | grep -i postgres || true
 ```
 
 Instalar versión recomendada:
@@ -503,11 +503,11 @@ pip check
 En terminales separadas:
 
 ```bash
-airflow webserver -D
+airflow3 webserver -D
 ```
 
 ```bash
-airflow scheduler -D
+airflow3 scheduler -D
 ```
 
 Acceso web:
@@ -521,7 +521,7 @@ http://localhost:8080
 ## 18. Limpieza de instalaciones globales (opcional)
 
 ```bash
-pip uninstall apache-airflow
+pip uninstall apache-airflow3
 rm -rf ~/.local/lib/python3.12/site-packages/apache_airflow*
 ```
 
@@ -533,17 +533,17 @@ Editar archivo `airflow.cfg` o .`env`:
 
 ```bash
 # [core]
-AIRFLOW_HOME=/opt/airflow/airflow_2.9.3
-AIRFLOW_CONFIG=/opt/airflow/airflow_2.9.3/configs/airflow.cfg
+AIRFLOW_HOME=/opt/airflow3/airflow_2.9.3
+AIRFLOW_CONFIG=/opt/airflow3/airflow_2.9.3/configs/airflow3.cfg
 
-AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/airflow_2.9.3/dags
+AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow3/airflow_2.9.3/dags
 AIRFLOW__CORE__DEFAULT_TIMEZONE="America/Asuncion"
 AIRFLOW__CORE__EXECUTOR=LocalExecutor
 AIRFLOW__CORE__PARALLELISM=32
 AIRFLOW__CORE__MAX_ACTIVE_TASKS_PER_DAG=16
 AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG=16
 AIRFLOW__CORE__LOAD_EXAMPLES=False
-AIRFLOW__CORE__PLUGINS_FOLDER=/opt/airflow/airflow_2.9.3/plugins
+AIRFLOW__CORE__PLUGINS_FOLDER=/opt/airflow3/airflow_2.9.3/plugins
 AIRFLOW__CORE__EXECUTE_TASKS_NEW_PYTHON_INTERPRETER=False
 AIRFLOW__CORE__TASK_RUNNER=StandardTaskRunner
 AIRFLOW__CORE__DEFAULT_TASK_EXECUTION_TIMEOUT=
@@ -555,11 +555,11 @@ AIRFLOW__DATABASE__SQL_ENGINE_ENCODING=utf-8
 AIRFLOW__DATABASE__SQL_ALCHEMY_SCHEMA=[shema_name]
 
 # [logging]
-AIRFLOW__LOGGING__BASE_LOG_FOLDER=/opt/airflow/airflow_2.9.3/logs
+AIRFLOW__LOGGING__BASE_LOG_FOLDER=/opt/airflow3/airflow_2.9.3/logs
 AIRFLOW__LOGGING__LOGGING_LEVEL=INFO
 AIRFLOW__LOGGING__FAB_LOGGING_LEVEL=WARNING
 AIRFLOW__LOGGING__TASK_LOG_PREFIX_TEMPLATE={ti.dag_id}-{ti.task_id}-{execution_date}-{try_number}
-AIRFLOW__LOGGING__DAG_PROCESSOR_MANAGER_LOG_LOCATION=/opt/airflow/airflow_2.9.3/logs/dag_processor_manager/dag_processor_manager.log
+AIRFLOW__LOGGING__DAG_PROCESSOR_MANAGER_LOG_LOCATION=/opt/airflow3/airflow_2.9.3/logs/dag_processor_manager/dag_processor_manager.log
 AIRFLOW__LOGGING__EXTRA_LOGGER_NAMES=connexion,sqlalchemy
 AIRFLOW__LOGGING__WORKER_LOG_SERVER_PORT=8793
 AIRFLOW__LOGGING__TRIGGER_LOG_SERVER_PORT=8794
@@ -568,7 +568,7 @@ AIRFLOW__LOGGING__TRIGGER_LOG_SERVER_PORT=8794
 AIRFLOW__METRICS__STATSD_ON=True
 AIRFLOW__METRICS__STATSD_HOST=127.0.0.1
 AIRFLOW__METRICS__STATSD_PORT=8125
-AIRFLOW__METRICS__STATSD_PREFIX=airflow
+AIRFLOW__METRICS__STATSD_PREFIX=airflow3
 AIRFLOW__METRICS__STATSD_DISABLED_TAGS=job_id,run_id,dag_id,task_id
 
 [cli]
@@ -583,12 +583,12 @@ AIRFLOW__OPERATORS__DEFAULT_GPUS=0
 
 # [webserver]
 AIRFLOW__WEBSERVER__ACCESS_DENIED_MESSAGE=Acceso denegado
-AIRFLOW__WEBSERVER__CONFIG_FILE=/opt/airflow/airflow_2.9.3/configs/webserver_config.py
+AIRFLOW__WEBSERVER__CONFIG_FILE=/opt/airflow3/airflow_2.9.3/configs/webserver_config.py
 AIRFLOW__WEBSERVER__BASE_URL=http://localhost:8080
 AIRFLOW__WEBSERVER__DEFAULT_UI_TIMEZONE="America/Asuncion"
 AIRFLOW__WEBSERVER__WEB_SERVER_HOST=0.0.0.0
 AIRFLOW__WEBSERVER__WEB_SERVER_PORT=8080
-AIRFLOW__WEBSERVER__SESSION_BACKEND=database		# command <<--- airflow db clean --table session
+AIRFLOW__WEBSERVER__SESSION_BACKEND=database		# command <<--- airflow3 db clean --table session
 AIRFLOW__WEBSERVER__WEB_SERVER_WORKER_TIMEOUT=120
 AIRFLOW__WEBSERVER__WORKER_REFRESH_BATCH_SIZE=1
 AIRFLOW__WEBSERVER__WORKER_REFRESH_INTERVAL=600
@@ -607,7 +607,7 @@ AIRFLOW__WEBSERVER__AUTO_REFRESH_INTERVAL=3
 AIRFLOW__SCHEDULER__JOB_HEARTBEAT_SEC=5
 AIRFLOW__SCHEDULER__SCHEDULER_HEARTBEAT_SEC=5
 AIRFLOW__SCHEDULER__SCHEDULER_HEALTH_CHECK_SERVER_PORT=8974
-AIRFLOW__SCHEDULER__CHILD_PROCESS_LOG_DIRECTORY=/opt/airflow/airflow_2.9.3/logs/scheduler
+AIRFLOW__SCHEDULER__CHILD_PROCESS_LOG_DIRECTORY=/opt/airflow3/airflow_2.9.3/logs/scheduler
 
 [triggerer]
 AIRFLOW__TRIGGERER__DEFAULT_CAPACITY=1000

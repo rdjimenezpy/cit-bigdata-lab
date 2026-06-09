@@ -33,7 +33,7 @@ Facultad Politécnica - Universidad Nacional de Asunción
 - **Fecha:** 11/05/2026
 - **Versión:** 1.0
 - **Documento base ajustado:** `Manual de comandos básicos de airflow CLI.md`
-- **Tutorial de referencia:** `09_tutorial_instalacion_configuracion_apache_airflow_3_2_1.md`
+- **Tutorial de referencia:** `11_tutorial_instalacion_configuracion_apache_airflow_3_2_1.md`
 
 ---
 
@@ -230,14 +230,14 @@ airflow3
 Alternativa explícita:
 
 ```bash
-source /opt/airflow/airflow_3.2.1/scripts/activate_airflow_3.2.1.sh
+source /opt/airflow3/airflow_3.2.1/scripts/activate_airflow_3.2.1.sh
 ```
 
 ### 5.2 Cargar variables del laboratorio
 
 ```bash
 set -a
-source /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+source /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 set +a
 ```
 
@@ -246,7 +246,7 @@ set +a
 ```bash
 echo "$AIRFLOW_HOME"
 echo "$AIRFLOW_CONFIG"
-which airflow
+which airflow3
 which python
 ```
 
@@ -270,30 +270,30 @@ No ejecutar comandos administrativos desde otro entorno Python. Si `which airflo
 El CLI se invoca con:
 
 ```bash
-airflow GROUP_OR_COMMAND [SUBCOMMAND] [OPTIONS]
+airflow3 GROUP_OR_COMMAND [SUBCOMMAND] [OPTIONS]
 ```
 
 Ayuda general:
 
 ```bash
-airflow --help
+airflow3 --help
 ```
 
 Ayuda de un grupo:
 
 ```bash
-airflow dags --help
-airflow tasks --help
-airflow db --help
-airflow api-server --help
+airflow3 dags --help
+airflow3 tasks --help
+airflow3 db --help
+airflow3 api-server --help
 ```
 
 Ayuda de un subcomando:
 
 ```bash
-airflow dags trigger --help
-airflow tasks test --help
-airflow connections add --help
+airflow3 dags trigger --help
+airflow3 tasks test --help
+airflow3 connections add --help
 ```
 
 ### 6.1 Grupos y comandos relevantes en Airflow 3.2.1
@@ -332,7 +332,7 @@ En Airflow 3.2.1, algunos comandos pueden aparecer o cambiar según el `auth_man
 Validar el auth manager:
 
 ```bash
-airflow config get-value core auth_manager
+airflow3 config get-value core auth_manager
 ```
 
 Valores esperados según el tutorial:
@@ -356,7 +356,7 @@ airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
 ### 7.1 Ver versión instalada
 
 ```bash
-airflow version
+airflow3 version
 ```
 
 Resultado esperado:
@@ -368,7 +368,7 @@ Resultado esperado:
 ### 7.2 Ver información completa del entorno
 
 ```bash
-airflow info
+airflow3 info
 ```
 
 Uso profesional:
@@ -395,11 +395,11 @@ No broken requirements found.
 ### 7.4 Validar configuración esencial
 
 ```bash
-airflow config get-value core executor
-airflow config get-value core dags_folder
-airflow config get-value core auth_manager
-airflow config get-value database sql_alchemy_conn
-airflow config get-value database sql_alchemy_schema
+airflow3 config get-value core executor
+airflow3 config get-value core dags_folder
+airflow3 config get-value core auth_manager
+airflow3 config get-value database sql_alchemy_conn
+airflow3 config get-value database sql_alchemy_schema
 ```
 
 Resultado esperado aproximado:
@@ -415,7 +415,7 @@ airflow3_metastore
 ### 7.5 Validar conexión al metastore
 
 ```bash
-airflow db check
+airflow3 db check
 ```
 
 Si falla, revisar:
@@ -432,46 +432,46 @@ psql "postgresql://airflow3:airflow3_lab_pass@localhost:5432/airflow3_meta" \
 ### 8.1 Listar configuración efectiva
 
 ```bash
-airflow config list
+airflow3 config list
 ```
 
 Guardar evidencia:
 
 ```bash
-airflow config list > /tmp/airflow_3_2_1_config_$(date +%Y%m%d_%H%M%S).txt
+airflow3 config list > /tmp/airflow_3_2_1_config_$(date +%Y%m%d_%H%M%S).txt
 ```
 
 ### 8.2 Consultar valores específicos
 
 ```bash
-airflow config get-value core executor
-airflow config get-value core dags_folder
-airflow config get-value core plugins_folder
-airflow config get-value core load_examples
-airflow config get-value core default_timezone
+airflow3 config get-value core executor
+airflow3 config get-value core dags_folder
+airflow3 config get-value core plugins_folder
+airflow3 config get-value core load_examples
+airflow3 config get-value core default_timezone
 ```
 
 ```bash
-airflow config get-value database sql_alchemy_conn
-airflow config get-value database sql_alchemy_schema
-airflow config get-value database sql_alchemy_pool_pre_ping
+airflow3 config get-value database sql_alchemy_conn
+airflow3 config get-value database sql_alchemy_schema
+airflow3 config get-value database sql_alchemy_pool_pre_ping
 ```
 
 ```bash
-airflow config get-value api host
-airflow config get-value api port
+airflow3 config get-value api host
+airflow3 config get-value api port
 ```
 
 ```bash
-airflow config get-value logging base_log_folder
-airflow config get-value logging logging_level
-airflow config get-value logging dag_processor_child_process_log_directory
+airflow3 config get-value logging base_log_folder
+airflow3 config get-value logging logging_level
+airflow3 config get-value logging dag_processor_child_process_log_directory
 ```
 
 ### 8.3 Validar Auth Manager activo
 
 ```bash
-airflow config get-value core auth_manager
+airflow3 config get-value core auth_manager
 ```
 
 Interpretación:
@@ -484,9 +484,9 @@ Interpretación:
 ### 8.4 Validar configuración de concurrencia
 
 ```bash
-airflow config get-value core parallelism
-airflow config get-value core max_active_tasks_per_dag
-airflow config get-value core max_active_runs_per_dag
+airflow3 config get-value core parallelism
+airflow3 config get-value core max_active_tasks_per_dag
+airflow3 config get-value core max_active_runs_per_dag
 ```
 
 Uso profesional:
@@ -501,10 +501,10 @@ Uso profesional:
 Cuando un DAG no ejecuta, revisar primero:
 
 ```bash
-airflow config get-value core dags_folder
-airflow config get-value scheduler parsing_cleanup_interval
-airflow config get-value scheduler min_file_process_interval
-airflow config get-value core load_examples
+airflow3 config get-value core dags_folder
+airflow3 config get-value scheduler parsing_cleanup_interval
+airflow3 config get-value scheduler min_file_process_interval
+airflow3 config get-value core load_examples
 ```
 
 > En ingeniería de datos, muchos errores atribuidos al DAG son realmente errores de configuración o entorno.
@@ -518,19 +518,19 @@ La metadata database es el núcleo operacional de Airflow. Allí se registra est
 ### 9.1 Verificar conectividad
 
 ```bash
-airflow db check
+airflow3 db check
 ```
 
 ### 9.2 Verificar migraciones pendientes
 
 ```bash
-airflow db check-migrations
+airflow3 db check-migrations
 ```
 
 ### 9.3 Aplicar migraciones
 
 ```bash
-airflow db migrate
+airflow3 db migrate
 ```
 
 Uso:
@@ -545,7 +545,7 @@ Uso:
 ### 9.4 Acceder al shell de base de datos
 
 ```bash
-airflow db shell
+airflow3 db shell
 ```
 
 Este comando abre una consola hacia la metadata database usando la configuración activa de Airflow.
@@ -553,13 +553,13 @@ Este comando abre una consola hacia la metadata database usando la configuració
 ### 9.5 Limpiar registros antiguos
 
 ```bash
-airflow db clean --help
+airflow3 db clean --help
 ```
 
 Ejecutar primero en modo revisión:
 
 ```bash
-airflow db clean \
+airflow3 db clean \
   --clean-before-timestamp "2026-01-01T00:00:00+00:00" \
   --dry-run
 ```
@@ -567,14 +567,14 @@ airflow db clean \
 Si la revisión es correcta:
 
 ```bash
-airflow db clean \
+airflow3 db clean \
   --clean-before-timestamp "2026-01-01T00:00:00+00:00"
 ```
 
 ### 9.6 Comando destructivo: `db reset`
 
 ```bash
-airflow db reset
+airflow3 db reset
 ```
 
 No ejecutar en un entorno con historial útil. Este comando puede eliminar o recrear estructuras de metadatos. En un laboratorio puede servir para reiniciar desde cero; en un entorno real puede destruir trazabilidad operativa.
@@ -582,7 +582,7 @@ No ejecutar en un entorno con historial útil. Este comando puede eliminar o rec
 ### 9.7 Comando de uso avanzado: `db downgrade`
 
 ```bash
-airflow db downgrade --help
+airflow3 db downgrade --help
 ```
 
 No se recomienda usarlo sin plan de rollback y backup. Las migraciones inversas pueden ser riesgosas si ya existen datos generados con una versión superior.
@@ -596,13 +596,13 @@ No se recomienda usarlo sin plan de rollback y backup. Las migraciones inversas 
 Iniciar API Server:
 
 ```bash
-airflow api-server --host 0.0.0.0 --port 8080
+airflow3 api-server --host 0.0.0.0 --port 8080
 ```
 
 Con opciones explícitas:
 
 ```bash
-airflow api-server \
+airflow3 api-server \
   --host 0.0.0.0 \
   --port 8080 \
   --workers 1 \
@@ -632,7 +632,7 @@ curl -s http://localhost:8080/api/v2/monitor/health | jq .
 Iniciar Scheduler:
 
 ```bash
-airflow scheduler
+airflow3 scheduler
 ```
 
 Función:
@@ -645,13 +645,13 @@ Función:
 Verificar scheduler por CLI:
 
 ```bash
-airflow jobs check --job-type SchedulerJob --local
+airflow3 jobs check --job-type SchedulerJob --local
 ```
 
 Para entornos con más de un scheduler:
 
 ```bash
-airflow jobs check --job-type SchedulerJob --allow-multiple --limit 100
+airflow3 jobs check --job-type SchedulerJob --allow-multiple --limit 100
 ```
 
 ### 10.3 DAG Processor
@@ -659,7 +659,7 @@ airflow jobs check --job-type SchedulerJob --allow-multiple --limit 100
 Iniciar DAG Processor:
 
 ```bash
-airflow dag-processor
+airflow3 dag-processor
 ```
 
 Función:
@@ -672,7 +672,7 @@ Función:
 Validar errores de importación:
 
 ```bash
-airflow dags list-import-errors
+airflow3 dags list-import-errors
 ```
 
 ### 10.4 Triggerer
@@ -680,7 +680,7 @@ airflow dags list-import-errors
 Iniciar Triggerer:
 
 ```bash
-airflow triggerer
+airflow3 triggerer
 ```
 
 Función:
@@ -696,7 +696,7 @@ Abrir cuatro terminales. En cada una:
 ```bash
 airflow3
 set -a
-source /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+source /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 set +a
 ```
 
@@ -704,16 +704,16 @@ Luego:
 
 ```bash
 # Terminal 1
-airflow api-server --host 0.0.0.0 --port 8080
+airflow3 api-server --host 0.0.0.0 --port 8080
 
 # Terminal 2
-airflow scheduler
+airflow3 scheduler
 
 # Terminal 3
-airflow dag-processor
+airflow3 dag-processor
 
 # Terminal 4
-airflow triggerer
+airflow3 triggerer
 ```
 
 ### 10.6 Comando no recomendado en este manual
@@ -721,7 +721,7 @@ airflow triggerer
 No usar:
 
 ```bash
-airflow webserver
+airflow3 webserver
 ```
 
 Para Airflow 3.2.1, este manual se alinea con `airflow api-server`.
@@ -733,19 +733,19 @@ Para Airflow 3.2.1, este manual se alinea con `airflow api-server`.
 ### 11.1 Listar DAGs
 
 ```bash
-airflow dags list
+airflow3 dags list
 ```
 
 Filtrar el DAG de validación:
 
 ```bash
-airflow dags list | grep cit_validacion_airflow3
+airflow3 dags list | grep cit_validacion_airflow3
 ```
 
 ### 11.2 Ver errores de importación
 
 ```bash
-airflow dags list-import-errors
+airflow3 dags list-import-errors
 ```
 
 Este debe ser uno de los primeros comandos ante cualquier problema de DAG invisible en la UI.
@@ -753,13 +753,13 @@ Este debe ser uno de los primeros comandos ante cualquier problema de DAG invisi
 ### 11.3 Mostrar estructura de un DAG
 
 ```bash
-airflow dags show cit_validacion_airflow3
+airflow3 dags show cit_validacion_airflow3
 ```
 
 Guardar salida como imagen o archivo, si el entorno lo permite:
 
 ```bash
-airflow dags show cit_validacion_airflow3 --save /tmp/cit_validacion_airflow3.png
+airflow3 dags show cit_validacion_airflow3 --save /tmp/cit_validacion_airflow3.png
 ```
 
 ### 11.4 Pausar y activar DAGs
@@ -767,58 +767,58 @@ airflow dags show cit_validacion_airflow3 --save /tmp/cit_validacion_airflow3.pn
 Pausar:
 
 ```bash
-airflow dags pause cit_validacion_airflow3
+airflow3 dags pause cit_validacion_airflow3
 ```
 
 Activar:
 
 ```bash
-airflow dags unpause cit_validacion_airflow3
+airflow3 dags unpause cit_validacion_airflow3
 ```
 
 ### 11.5 Disparar ejecución manual
 
 ```bash
-airflow dags trigger cit_validacion_airflow3
+airflow3 dags trigger cit_validacion_airflow3
 ```
 
 Con `run_id` explícito:
 
 ```bash
-airflow dags trigger cit_validacion_airflow3 \
+airflow3 dags trigger cit_validacion_airflow3 \
   --run-id "manual_cli_$(date +%Y%m%d_%H%M%S)"
 ```
 
 Con configuración JSON:
 
 ```bash
-airflow dags trigger cit_validacion_airflow3 \
+airflow3 dags trigger cit_validacion_airflow3 \
   --conf '{"fuente":"cli","modo":"laboratorio"}'
 ```
 
 ### 11.6 Listar ejecuciones de un DAG
 
 ```bash
-airflow dags list-runs -d cit_validacion_airflow3
+airflow3 dags list-runs -d cit_validacion_airflow3
 ```
 
 Guardar evidencia:
 
 ```bash
-airflow dags list-runs -d cit_validacion_airflow3 \
+airflow3 dags list-runs -d cit_validacion_airflow3 \
   > /tmp/cit_validacion_airflow3_runs_$(date +%Y%m%d_%H%M%S).txt
 ```
 
 ### 11.7 Ver estado de un DAG en una fecha lógica
 
 ```bash
-airflow dags state cit_validacion_airflow3 2026-01-01
+airflow3 dags state cit_validacion_airflow3 2026-01-01
 ```
 
 ### 11.8 Probar un DAG completo sin depender del scheduler
 
 ```bash
-airflow dags test cit_validacion_airflow3 2026-01-01
+airflow3 dags test cit_validacion_airflow3 2026-01-01
 ```
 
 Uso:
@@ -830,7 +830,7 @@ Uso:
 ### 11.9 Re-serializar DAGs
 
 ```bash
-airflow dags reserialize
+airflow3 dags reserialize
 ```
 
 Uso:
@@ -842,7 +842,7 @@ Uso:
 ### 11.10 Eliminar un DAG del metastore
 
 ```bash
-airflow dags delete cit_validacion_airflow3
+airflow3 dags delete cit_validacion_airflow3
 ```
 
 Advertencia: esto elimina registros del metastore asociados al DAG. No elimina necesariamente el archivo `.py`. Usarlo solo si se comprende el impacto sobre historial de ejecuciones.
@@ -854,19 +854,19 @@ Advertencia: esto elimina registros del metastore asociados al DAG. No elimina n
 ### 12.1 Listar tareas de un DAG
 
 ```bash
-airflow tasks list cit_validacion_airflow3
+airflow3 tasks list cit_validacion_airflow3
 ```
 
 Con árbol de dependencias:
 
 ```bash
-airflow tasks list cit_validacion_airflow3 --tree
+airflow3 tasks list cit_validacion_airflow3 --tree
 ```
 
 ### 12.2 Probar una tarea individual
 
 ```bash
-airflow tasks test cit_validacion_airflow3 extraer 2026-01-01
+airflow3 tasks test cit_validacion_airflow3 extraer 2026-01-01
 ```
 
 Uso:
@@ -879,7 +879,7 @@ Uso:
 ### 12.3 Renderizar templates de una tarea
 
 ```bash
-airflow tasks render cit_validacion_airflow3 extraer 2026-01-01
+airflow3 tasks render cit_validacion_airflow3 extraer 2026-01-01
 ```
 
 Uso:
@@ -891,7 +891,7 @@ Uso:
 ### 12.4 Ver estado de una tarea
 
 ```bash
-airflow tasks state cit_validacion_airflow3 extraer 2026-01-01
+airflow3 tasks state cit_validacion_airflow3 extraer 2026-01-01
 ```
 
 ### 12.5 Ver estados de tareas por DAG Run
@@ -899,19 +899,19 @@ airflow tasks state cit_validacion_airflow3 extraer 2026-01-01
 Primero listar runs:
 
 ```bash
-airflow dags list-runs -d cit_validacion_airflow3
+airflow3 dags list-runs -d cit_validacion_airflow3
 ```
 
 Luego usar el `run_id`:
 
 ```bash
-airflow tasks states-for-dag-run cit_validacion_airflow3 "manual__2026-01-01T00:00:00+00:00"
+airflow3 tasks states-for-dag-run cit_validacion_airflow3 "manual__2026-01-01T00:00:00+00:00"
 ```
 
 ### 12.6 Diagnosticar dependencias fallidas
 
 ```bash
-airflow tasks failed-deps cit_validacion_airflow3 extraer 2026-01-01
+airflow3 tasks failed-deps cit_validacion_airflow3 extraer 2026-01-01
 ```
 
 Uso:
@@ -923,7 +923,7 @@ Uso:
 ### 12.7 Limpiar estados de tareas
 
 ```bash
-airflow tasks clear cit_validacion_airflow3 \
+airflow3 tasks clear cit_validacion_airflow3 \
   --start-date 2026-01-01 \
   --end-date 2026-01-01
 ```
@@ -947,8 +947,8 @@ En Airflow 3.2.1 el backfill se administra como grupo específico.
 ### 13.1 Ver ayuda
 
 ```bash
-airflow backfill --help
-airflow backfill create --help
+airflow3 backfill --help
+airflow3 backfill create --help
 ```
 
 ### 13.2 Crear backfill
@@ -956,7 +956,7 @@ airflow backfill create --help
 Ejemplo conceptual:
 
 ```bash
-airflow backfill create \
+airflow3 backfill create \
   --dag-id cit_validacion_airflow3 \
   --from-date 2026-01-01 \
   --to-date 2026-01-07
@@ -978,7 +978,7 @@ Ejemplos:
 No usar backfill para probar una tarea aislada. Para eso usar:
 
 ```bash
-airflow tasks test cit_validacion_airflow3 extraer 2026-01-01
+airflow3 tasks test cit_validacion_airflow3 extraer 2026-01-01
 ```
 
 No usar backfill si el DAG escribe datos de forma no idempotente y no tiene estrategia de sobrescritura, particionado o control de duplicados.
@@ -992,19 +992,19 @@ Airflow 3.x fortalece el concepto de assets para modelar dependencias orientadas
 ### 14.1 Listar assets
 
 ```bash
-airflow assets list
+airflow3 assets list
 ```
 
 ### 14.2 Ver detalles de un asset
 
 ```bash
-airflow assets details --help
+airflow3 assets details --help
 ```
 
 ### 14.3 Materializar asset
 
 ```bash
-airflow assets materialize --help
+airflow3 assets materialize --help
 ```
 
 ### 14.4 Uso académico
@@ -1026,19 +1026,19 @@ Las conexiones externalizan credenciales y endpoints. Evitan hardcodear usuarios
 ### 15.1 Listar conexiones
 
 ```bash
-airflow connections list
+airflow3 connections list
 ```
 
 ### 15.2 Ver una conexión
 
 ```bash
-airflow connections get postgres_analytics
+airflow3 connections get postgres_analytics
 ```
 
 ### 15.3 Crear conexión PostgreSQL
 
 ```bash
-airflow connections add postgres_analytics \
+airflow3 connections add postgres_analytics \
   --conn-type postgres \
   --conn-host localhost \
   --conn-schema analytics_db \
@@ -1050,32 +1050,32 @@ airflow connections add postgres_analytics \
 ### 15.4 Crear conexión usando URI
 
 ```bash
-airflow connections add postgres_analytics_uri \
+airflow3 connections add postgres_analytics_uri \
   --conn-uri 'postgresql://analytics_user:cambiar_esta_password@localhost:5432/analytics_db'
 ```
 
 ### 15.5 Probar conexión
 
 ```bash
-airflow connections test postgres_analytics
+airflow3 connections test postgres_analytics
 ```
 
 ### 15.6 Exportar conexiones
 
 ```bash
-airflow connections export /tmp/airflow_connections.json
+airflow3 connections export /tmp/airflow_connections.json
 ```
 
 ### 15.7 Importar conexiones
 
 ```bash
-airflow connections import /tmp/airflow_connections.json
+airflow3 connections import /tmp/airflow_connections.json
 ```
 
 ### 15.8 Eliminar conexión
 
 ```bash
-airflow connections delete postgres_analytics
+airflow3 connections delete postgres_analytics
 ```
 
 ### 15.9 Buenas prácticas con conexiones
@@ -1094,41 +1094,41 @@ Las variables permiten parametrizar DAGs sin cambiar código.
 ### 16.1 Listar variables
 
 ```bash
-airflow variables list
+airflow3 variables list
 ```
 
 ### 16.2 Crear o actualizar variable
 
 ```bash
-airflow variables set ENVIRONMENT lab
+airflow3 variables set ENVIRONMENT lab
 ```
 
 ```bash
-airflow variables set DATA_ROOT /opt/repo/cit-bigdata-lab/projects/data
+airflow3 variables set DATA_ROOT /opt/repo/cit-bigdata-lab/projects/data
 ```
 
 ### 16.3 Leer variable
 
 ```bash
-airflow variables get ENVIRONMENT
+airflow3 variables get ENVIRONMENT
 ```
 
 ### 16.4 Exportar variables
 
 ```bash
-airflow variables export /tmp/airflow_variables.json
+airflow3 variables export /tmp/airflow_variables.json
 ```
 
 ### 16.5 Importar variables
 
 ```bash
-airflow variables import /tmp/airflow_variables.json
+airflow3 variables import /tmp/airflow_variables.json
 ```
 
 ### 16.6 Eliminar variable
 
 ```bash
-airflow variables delete ENVIRONMENT
+airflow3 variables delete ENVIRONMENT
 ```
 
 ### 16.7 Buenas prácticas con variables
@@ -1152,29 +1152,29 @@ Los pools controlan cuántas tareas pueden usar un recurso compartido.
 ### 17.1 Listar pools
 
 ```bash
-airflow pools list
+airflow3 pools list
 ```
 
 ### 17.2 Crear o actualizar pool
 
 ```bash
-airflow pools set postgres_pool 4 "Control de concurrencia hacia PostgreSQL"
+airflow3 pools set postgres_pool 4 "Control de concurrencia hacia PostgreSQL"
 ```
 
 ```bash
-airflow pools set api_sfp_pool 2 "Control de concurrencia hacia API o fuente externa"
+airflow3 pools set api_sfp_pool 2 "Control de concurrencia hacia API o fuente externa"
 ```
 
 ### 17.3 Ver un pool
 
 ```bash
-airflow pools get postgres_pool
+airflow3 pools get postgres_pool
 ```
 
 ### 17.4 Eliminar pool
 
 ```bash
-airflow pools delete postgres_pool
+airflow3 pools delete postgres_pool
 ```
 
 ### 17.5 Cuándo usar pools
@@ -1196,31 +1196,31 @@ Los providers extienden Airflow con hooks, operadores, sensores, conexiones y co
 ### 18.1 Listar providers instalados
 
 ```bash
-airflow providers list
+airflow3 providers list
 ```
 
 ### 18.2 Ver información de un provider
 
 ```bash
-airflow providers get apache-airflow-providers-postgres
+airflow3 providers get apache-airflow3-providers-postgres
 ```
 
 ### 18.3 Listar hooks disponibles
 
 ```bash
-airflow providers hooks
+airflow3 providers hooks
 ```
 
 ### 18.4 Listar auth managers disponibles por providers
 
 ```bash
-airflow providers auth-managers
+airflow3 providers auth-managers
 ```
 
 ### 18.5 Listar executors disponibles por providers
 
 ```bash
-airflow providers executors
+airflow3 providers executors
 ```
 
 ### 18.6 Uso profesional
@@ -1237,7 +1237,7 @@ airflow providers executors
 ### 19.1 Ver Auth Manager activo
 
 ```bash
-airflow config get-value core auth_manager
+airflow3 config get-value core auth_manager
 ```
 
 ### 19.2 Caso A: SimpleAuthManager
@@ -1247,7 +1247,7 @@ En el tutorial de instalación de referencia se usa `SimpleAuthManager` para lab
 Validar:
 
 ```bash
-airflow config get-value core auth_manager
+airflow3 config get-value core auth_manager
 ```
 
 Si devuelve:
@@ -1259,7 +1259,7 @@ airflow.api_fastapi.auth.managers.simple.simple_auth_manager.SimpleAuthManager
 Los usuarios se gestionan desde configuración:
 
 ```bash
-airflow config get-value core simple_auth_manager_users
+airflow3 config get-value core simple_auth_manager_users
 ```
 
 Ejemplo de configuración en `airflow3_lab.env`:
@@ -1291,13 +1291,13 @@ airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
 entonces pueden aplicar comandos clásicos como:
 
 ```bash
-airflow users list
+airflow3 users list
 ```
 
 Crear usuario administrador:
 
 ```bash
-airflow users create \
+airflow3 users create \
   --username admin \
   --firstname Admin \
   --lastname CIT \
@@ -1309,13 +1309,13 @@ airflow users create \
 Listar roles:
 
 ```bash
-airflow roles list
+airflow3 roles list
 ```
 
 Crear rol:
 
 ```bash
-airflow roles create data_engineer
+airflow3 roles create data_engineer
 ```
 
 > **Advertencia:** cambiar de `SimpleAuthManager` a `FabAuthManager` no es un cambio menor. Afecta usuarios, permisos y experiencia de login. En un entorno real requiere plan de migración.
@@ -1325,20 +1325,20 @@ airflow roles create data_engineer
 Airflow 3.2.1 incluye comandos `teams` para escenarios multi-team.
 
 ```bash
-airflow teams --help
-airflow teams list
+airflow3 teams --help
+airflow3 teams list
 ```
 
 Crear equipo:
 
 ```bash
-airflow teams create equipo_bigdata
+airflow3 teams create equipo_bigdata
 ```
 
 Eliminar equipo:
 
 ```bash
-airflow teams delete equipo_bigdata
+airflow3 teams delete equipo_bigdata
 ```
 
 Uso recomendado:
@@ -1354,7 +1354,7 @@ Uso recomendado:
 ### 20.1 `airflow info`
 
 ```bash
-airflow info
+airflow3 info
 ```
 
 Usar cuando se necesita un diagnóstico general del entorno.
@@ -1364,19 +1364,19 @@ Usar cuando se necesita un diagnóstico general del entorno.
 Scheduler local:
 
 ```bash
-airflow jobs check --job-type SchedulerJob --local
+airflow3 jobs check --job-type SchedulerJob --local
 ```
 
 Scheduler en modo tolerante a múltiples instancias:
 
 ```bash
-airflow jobs check --job-type SchedulerJob --allow-multiple --limit 100
+airflow3 jobs check --job-type SchedulerJob --allow-multiple --limit 100
 ```
 
 ### 20.3 `airflow plugins`
 
 ```bash
-airflow plugins
+airflow3 plugins
 ```
 
 Uso:
@@ -1388,7 +1388,7 @@ Uso:
 ### 20.4 `airflow cheat-sheet`
 
 ```bash
-airflow cheat-sheet
+airflow3 cheat-sheet
 ```
 
 Útil como recordatorio rápido, pero no sustituye `airflow <grupo> --help` ni la documentación oficial.
@@ -1400,7 +1400,7 @@ airflow cheat-sheet
 ### 21.1 Verificar Fernet Key
 
 ```bash
-airflow config get-value core fernet_key
+airflow3 config get-value core fernet_key
 ```
 
 La clave Fernet cifra valores sensibles almacenados en Airflow, como contraseñas de conexiones.
@@ -1408,7 +1408,7 @@ La clave Fernet cifra valores sensibles almacenados en Airflow, como contraseña
 ### 21.2 Rotar Fernet Key
 
 ```bash
-airflow rotate-fernet-key
+airflow3 rotate-fernet-key
 ```
 
 No ejecutar sin comprender el procedimiento. Una rotación incorrecta puede dejar conexiones o variables sensibles ilegibles.
@@ -1461,20 +1461,20 @@ curl -f http://localhost:8080/api/v2/monitor/health
 ### 22.2 Health check de base de datos
 
 ```bash
-airflow db check
+airflow3 db check
 ```
 
 ### 22.3 Health check de scheduler
 
 ```bash
-airflow jobs check --job-type SchedulerJob --local
+airflow3 jobs check --job-type SchedulerJob --local
 ```
 
 ### 22.4 Diagnóstico de procesos
 
 ```bash
-pgrep -af airflow
-ps aux | grep airflow | grep -v grep
+pgrep -af airflow3
+ps aux | grep airflow3 | grep -v grep
 ```
 
 ### 22.5 Diagnóstico de puerto 8080
@@ -1635,49 +1635,49 @@ LIMIT 20;
 ```bash
 airflow3
 set -a
-source /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+source /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 set +a
 
-which airflow
-airflow version
-airflow db check
-airflow dags list
+which airflow3
+airflow3 version
+airflow3 db check
+airflow3 dags list
 ```
 
 Luego iniciar servicios en terminales separadas:
 
 ```bash
-airflow api-server --host 0.0.0.0 --port 8080
+airflow3 api-server --host 0.0.0.0 --port 8080
 ```
 
 ```bash
-airflow scheduler
+airflow3 scheduler
 ```
 
 ```bash
-airflow dag-processor
+airflow3 dag-processor
 ```
 
 ```bash
-airflow triggerer
+airflow3 triggerer
 ```
 
 ### 24.2 Validar salud
 
 ```bash
 curl -s http://localhost:8080/api/v2/monitor/health | jq .
-airflow jobs check --job-type SchedulerJob --local
-airflow db check
+airflow3 jobs check --job-type SchedulerJob --local
+airflow3 db check
 ```
 
 ### 24.3 Probar DAG de validación
 
 ```bash
-airflow dags list | grep cit_validacion_airflow3
-airflow tasks list cit_validacion_airflow3
-airflow tasks test cit_validacion_airflow3 extraer 2026-01-01
-airflow dags trigger cit_validacion_airflow3
-airflow dags list-runs -d cit_validacion_airflow3
+airflow3 dags list | grep cit_validacion_airflow3
+airflow3 tasks list cit_validacion_airflow3
+airflow3 tasks test cit_validacion_airflow3 extraer 2026-01-01
+airflow3 dags trigger cit_validacion_airflow3
+airflow3 dags list-runs -d cit_validacion_airflow3
 ```
 
 ### 24.4 Cierre manual
@@ -1721,21 +1721,21 @@ sudo systemctl stop airflow3-api-server
 ```bash
 airflow3
 set -a
-source /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+source /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 set +a
 ```
 
 2. Validar versión y ruta:
 
 ```bash
-which airflow
-airflow version
+which airflow3
+airflow3 version
 ```
 
 3. Revisar la ayuda antes de ejecutar comandos desconocidos:
 
 ```bash
-airflow <grupo> --help
+airflow3 <grupo> --help
 ```
 
 4. No usar comandos destructivos sin backup.
@@ -1817,99 +1817,99 @@ Este es el punto donde Airflow deja de ser una herramienta que “corre DAGs” 
 # ==========================================================
 airflow3
 set -a
-source /opt/airflow/airflow_3.2.1/configs/airflow3_lab.env
+source /opt/airflow3/airflow_3.2.1/configs/airflow3_lab.env
 set +a
 
 # ==========================================================
 # 2. Verificación básica
 # ==========================================================
-which airflow
-airflow version
-airflow info
+which airflow3
+airflow3 version
+airflow3 info
 pip check
 
 # ==========================================================
 # 3. Configuración
 # ==========================================================
-airflow config list
-airflow config get-value core executor
-airflow config get-value core auth_manager
-airflow config get-value database sql_alchemy_conn
-airflow config get-value database sql_alchemy_schema
+airflow3 config list
+airflow3 config get-value core executor
+airflow3 config get-value core auth_manager
+airflow3 config get-value database sql_alchemy_conn
+airflow3 config get-value database sql_alchemy_schema
 
 # ==========================================================
 # 4. Base de metadatos
 # ==========================================================
-airflow db check
-airflow db check-migrations
-airflow db migrate
+airflow3 db check
+airflow3 db check-migrations
+airflow3 db migrate
 
 # ==========================================================
 # 5. Servicios principales
 # ==========================================================
-airflow api-server --host 0.0.0.0 --port 8080
-airflow scheduler
-airflow dag-processor
-airflow triggerer
+airflow3 api-server --host 0.0.0.0 --port 8080
+airflow3 scheduler
+airflow3 dag-processor
+airflow3 triggerer
 
 # ==========================================================
 # 6. Health checks
 # ==========================================================
 curl -f http://localhost:8080/api/v2/monitor/health
-airflow jobs check --job-type SchedulerJob --local
-airflow db check
+airflow3 jobs check --job-type SchedulerJob --local
+airflow3 db check
 
 # ==========================================================
 # 7. DAGs
 # ==========================================================
-airflow dags list
-airflow dags list-import-errors
-airflow dags show cit_validacion_airflow3
-airflow dags pause cit_validacion_airflow3
-airflow dags unpause cit_validacion_airflow3
-airflow dags trigger cit_validacion_airflow3
-airflow dags list-runs -d cit_validacion_airflow3
-airflow dags test cit_validacion_airflow3 2026-01-01
+airflow3 dags list
+airflow3 dags list-import-errors
+airflow3 dags show cit_validacion_airflow3
+airflow3 dags pause cit_validacion_airflow3
+airflow3 dags unpause cit_validacion_airflow3
+airflow3 dags trigger cit_validacion_airflow3
+airflow3 dags list-runs -d cit_validacion_airflow3
+airflow3 dags test cit_validacion_airflow3 2026-01-01
 
 # ==========================================================
 # 8. Tasks
 # ==========================================================
-airflow tasks list cit_validacion_airflow3
-airflow tasks list cit_validacion_airflow3 --tree
-airflow tasks test cit_validacion_airflow3 extraer 2026-01-01
-airflow tasks render cit_validacion_airflow3 extraer 2026-01-01
-airflow tasks failed-deps cit_validacion_airflow3 extraer 2026-01-01
+airflow3 tasks list cit_validacion_airflow3
+airflow3 tasks list cit_validacion_airflow3 --tree
+airflow3 tasks test cit_validacion_airflow3 extraer 2026-01-01
+airflow3 tasks render cit_validacion_airflow3 extraer 2026-01-01
+airflow3 tasks failed-deps cit_validacion_airflow3 extraer 2026-01-01
 
 # ==========================================================
 # 9. Connections
 # ==========================================================
-airflow connections list
-airflow connections get postgres_analytics
-airflow connections test postgres_analytics
-airflow connections export /tmp/airflow_connections.json
+airflow3 connections list
+airflow3 connections get postgres_analytics
+airflow3 connections test postgres_analytics
+airflow3 connections export /tmp/airflow_connections.json
 
 # ==========================================================
 # 10. Variables
 # ==========================================================
-airflow variables list
-airflow variables set ENVIRONMENT lab
-airflow variables get ENVIRONMENT
-airflow variables export /tmp/airflow_variables.json
+airflow3 variables list
+airflow3 variables set ENVIRONMENT lab
+airflow3 variables get ENVIRONMENT
+airflow3 variables export /tmp/airflow_variables.json
 
 # ==========================================================
 # 11. Pools
 # ==========================================================
-airflow pools list
-airflow pools set postgres_pool 4 "Control de concurrencia hacia PostgreSQL"
-airflow pools get postgres_pool
+airflow3 pools list
+airflow3 pools set postgres_pool 4 "Control de concurrencia hacia PostgreSQL"
+airflow3 pools get postgres_pool
 
 # ==========================================================
 # 12. Providers
 # ==========================================================
-airflow providers list
-airflow providers auth-managers
-airflow providers executors
-airflow providers hooks
+airflow3 providers list
+airflow3 providers auth-managers
+airflow3 providers executors
+airflow3 providers hooks
 ```
 
 ---
@@ -1921,13 +1921,13 @@ airflow providers hooks
 Comando heredado de Airflow 2.x:
 
 ```bash
-airflow webserver
+airflow3 webserver
 ```
 
 Comando correcto en esta guía:
 
 ```bash
-airflow api-server --host 0.0.0.0 --port 8080
+airflow3 api-server --host 0.0.0.0 --port 8080
 ```
 
 ### B.2 No usar `airflow db init` como práctica principal
@@ -1935,13 +1935,13 @@ airflow api-server --host 0.0.0.0 --port 8080
 En Airflow 3.2.1, la guía usa:
 
 ```bash
-airflow db migrate
+airflow3 db migrate
 ```
 
 ### B.3 No ejecutar reset sin respaldo
 
 ```bash
-airflow db reset
+airflow3 db reset
 ```
 
 Usar únicamente en laboratorios descartables o entornos reconstruibles.
@@ -1949,7 +1949,7 @@ Usar únicamente en laboratorios descartables o entornos reconstruibles.
 ### B.4 No limpiar tareas sin idempotencia
 
 ```bash
-airflow tasks clear cit_validacion_airflow3
+airflow3 tasks clear cit_validacion_airflow3
 ```
 
 Antes de limpiar tareas, responder:
@@ -1962,7 +1962,7 @@ Antes de limpiar tareas, responder:
 ### B.5 No rotar Fernet Key sin procedimiento
 
 ```bash
-airflow rotate-fernet-key
+airflow3 rotate-fernet-key
 ```
 
 Requiere respaldo, validación y conocimiento de claves previas.

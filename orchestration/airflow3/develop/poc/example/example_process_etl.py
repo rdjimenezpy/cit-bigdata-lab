@@ -14,7 +14,7 @@ sys.path.append('/home/richard/analytics/airflow_project/dags')
 #from dags.template.cotizacion_mensual.subdags.etl_load import subdag_etl_load
 
 default_args = {
-    'owner': 'airflow',
+    'owner': 'airflow3',
     'depends_on_past': False,
     'start_date': datetime(2023, 10, 8),
     'email_on_failure': False,

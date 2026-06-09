@@ -29,7 +29,7 @@ dag = DAG(
     description="Ejemplo definición de un DAG básico.",
     default_args=default_args,
     schedule_interval=None,
-    template_searchpath="/home/victor/airflow/SQL",  ##configuracion para que encuentre los archivos sql
+    template_searchpath="/home/victor/airflow3/SQL",  ##configuracion para que encuentre los archivos sql
     catchup=False,
     tags=['poc', 'sample']
 )

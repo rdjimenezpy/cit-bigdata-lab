@@ -63,7 +63,7 @@ pip-wheel-metadata/
 # ---------------------------------------------------------
 # Airflow
 # ---------------------------------------------------------
-orchestration/airflow/logs/
+orchestration/airflow3/logs/
 airflow-webserver.pid
 airflow-scheduler.pid
 airflow-triggerer.pid

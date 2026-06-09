@@ -19,7 +19,7 @@ from airflow import DAG
 from airflow.models import Variable
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
-#from airflow.providers.postgres.operators.postgres import PostgresOperator
+#from airflow3.providers.postgres.operators.postgres import PostgresOperator
 from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from jinja2 import Environment, FileSystemLoader
 from sqlalchemy import create_engine
